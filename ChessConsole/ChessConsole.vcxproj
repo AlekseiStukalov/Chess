@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5C92F94B-2DB8-41C9-9365-ACCB8A26BC0B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>ChessEngine</RootNamespace>
+    <RootNamespace>ChessConsole</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <ProjectName>ChessConsole</ProjectName>
   </PropertyGroup>

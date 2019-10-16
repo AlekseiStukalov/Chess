@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChessConsole", "ChessEngine\ChessEngine.vcxproj", "{5C92F94B-2DB8-41C9-9365-ACCB8A26BC0B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChessConsole", "ChessConsole\ChessConsole.vcxproj", "{5C92F94B-2DB8-41C9-9365-ACCB8A26BC0B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F3EC154F-461E-4560-99C9-A388382076A9} = {F3EC154F-461E-4560-99C9-A388382076A9}
 	EndProjectSection
