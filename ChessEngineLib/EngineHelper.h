@@ -6,14 +6,14 @@ class EngineHelper
 {
 public:
 
-	ChessColor GetCellColor(int number, int literNumber);
-	ChessColor GetCellColor(std::string cellName);
+    ChessColor GetCellColor(int number, int literNumber);
+    ChessColor GetCellColor(std::string cellName);
 
-	int GetLiterNumber(char liter);
-	char GetLiterByNumber(int number);
+    int GetLiterNumber(char liter);
+    char GetLiterByNumber(int number);
 
-	bool IsCoordinateCorrect(int number, int literNumber);
-	bool IsCoordinateCorrect(std::string cellName);
+    bool IsCoordinateCorrect(int number, int literNumber);
+    bool IsCoordinateCorrect(std::string cellName);
 
     std::string GetCellName(int number, int literNumber);
     CellPos GetCellPos(std::string cellName);

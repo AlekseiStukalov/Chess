@@ -14,8 +14,8 @@ public:
 
 private:
 
-	ConsoleUIHelper m_uiHelper;
-	IDeck *m_pDeck;
+    ConsoleUIHelper m_uiHelper;
+    IDeck *m_pDeck;
     Player m_WhitePlayer;
     Player m_BlackPlayer;
 };

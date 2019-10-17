@@ -10,18 +10,18 @@ public:
     DeckCell();
     ~DeckCell();
 
-	virtual ChessColor GetCellColor();
-	virtual IChessman* GetChessman();
-	virtual std::string GetCellName();
-	virtual CellPos GetCellPos();
+    virtual ChessColor GetCellColor();
+    virtual IChessman* GetChessman();
+    virtual std::string GetCellName();
+    virtual CellPos GetCellPos();
 
-	void SetCellColor(ChessColor color);
-	void SetChessman(Chessman *pChessman);
-	void SetCellName(std::string cellName);
+    void SetCellColor(ChessColor color);
+    void SetChessman(Chessman *pChessman);
+    void SetCellName(std::string cellName);
 
 protected:
-	ChessColor m_nCellColor;
-	std::string m_sCellName;
-	Chessman* m_pChessman;
+    ChessColor m_nCellColor;
+    std::string m_sCellName;
+    Chessman* m_pChessman;
 };
 
