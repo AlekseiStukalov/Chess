@@ -39,4 +39,5 @@ public:
     virtual IDeckCell* GetCell(CellPos &cellPos) = 0;
     virtual IDeckCell* GetCell(int number, int literNumber) = 0;
     virtual IChessman* GetChessmanFromDeck(int number, int literNumber) = 0;
+    virtual std::vector<IChessman*> GetKilledChessmen(ChessColor playerColor) = 0;
 };

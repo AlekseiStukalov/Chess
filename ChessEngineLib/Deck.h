@@ -13,17 +13,15 @@ public:
     ~Deck();
 
     virtual StepResult MakeStep(ChessColor playerColor, std::string &sOldPos, std::string &sNewPos);
-
-    /*
-    *	All possible steps with cells, where this figure will be under attack
-    */
-    virtual stringVector GetPossibleSteps(std::string &cellName);
+    virtual stringVector GetPossibleSteps(std::string &cellName);///All possible steps with cells, where this figure will be under attack
     virtual IDeckCell* GetCell(std::string &cellName);
     virtual IDeckCell* GetCell(CellPos &cellPos);
     virtual IDeckCell* GetCell(int number, int literNumber);
     virtual IChessman* GetChessmanFromDeck(int number, int literNumber);
+    virtual std::vector<IChessman*> GetKilledChessmen(ChessColor playerColor);
 
 protected:
+    StepResult DoMakeStep(ChessColor playerColor, std::string &sOldPos, std::string &sNewPos);
     stringVector GetPossibleSteps(Chessman *pChessman);
     stringVector GetAllPossibleSteps(ChessColor nPlayerColor);
     stringVector GetPossibleStrightSteps(CellPos &cellPos, Chessman *pChessman);
@@ -53,6 +51,7 @@ protected:
 
     bool MoveFigure(std::string &oldCellName, std::string &newCellName);
     bool MoveFigure(int oldNumber, int oldLiterNumber, int newNumber, int newLiterNumber);
+
     bool CanFigureStepToCell(DeckCell *pCell, ChessColor figureColor);
 
     size_t GetStepNumber();
@@ -60,6 +59,7 @@ protected:
 
 protected:
     std::vector<std::vector<DeckCell>> m_ChessDeck;     /// [number][literNumber]
+    std::vector<std::pair<ChessColor, Chessman*>> m_KilledChessmen;
     size_t m_nStepNumber;
 };
 

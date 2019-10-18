@@ -19,7 +19,11 @@ Deck::Deck()
 
 Deck::~Deck()
 {
-    //?
+    for (auto chessman : m_KilledChessmen)
+    {
+        delete chessman.second;
+        chessman.second = nullptr;
+    }
 }
 
 StepResult Deck::MakeStep(ChessColor playerColor, std::string &sOldPos, std::string &sNewPos)
@@ -45,16 +49,55 @@ StepResult Deck::MakeStep(ChessColor playerColor, std::string &sOldPos, std::str
 
     stringVector possibleSteps = GetPossibleSteps(sOldPos);
 
-    if (possibleSteps.find_no_case(sNewPos) != std::string::npos)
+    size_t pos = possibleSteps.find_no_case(sNewPos);
+    if (pos != std::string::npos)
     {
-        if (MoveFigure(sOldPos, sNewPos))
-        {
-            result.bSuccess = true;
-            result.nNextPlayerColor = (playerColor == CHESS_COLOR_BLACK ? CHESS_COLOR_WHITE : CHESS_COLOR_BLACK);
+        sNewPos = possibleSteps[pos];
 
-            result.gameState = GetGameState();
-            IncStepNumber();
+        return DoMakeStep(playerColor, sOldPos, sNewPos);
+    }
+
+    return result;
+}
+
+StepResult Deck::DoMakeStep(ChessColor playerColor, std::string &sOldPos, std::string &sNewPos)
+{
+    StepResult result;
+    bool bKill = false;
+    std::string cellNameKill;
+
+    IChessman* pEnemyChessman = GetCell(sNewPos)->GetChessman();
+    if (pEnemyChessman)
+    {
+        bKill = true;
+        cellNameKill = sNewPos;
+    }
+    else
+    {
+        if (sNewPos.back() == '!')
+        {
+            bKill = true;
+            CellPos cellPosKill = EngineHelper::Instance().GetCellPos(sNewPos); //new cell
+            CellPos cellPosCurr = EngineHelper::Instance().GetCellPos(sOldPos); //old cell
+
+            cellNameKill = EngineHelper::Instance().GetCellName(cellPosCurr.number, cellPosKill.literNumber);
+            pEnemyChessman = GetCell(cellNameKill)->GetChessman();
         }
+    }
+
+    if (bKill)
+    {
+        RemoveFigure(cellNameKill);
+        m_KilledChessmen.push_back(std::make_pair(pEnemyChessman->GetChessmanColor(), (Chessman*)pEnemyChessman));
+    }
+
+    if (MoveFigure(sOldPos, sNewPos))
+    {
+        result.bSuccess = true;
+        result.nNextPlayerColor = (playerColor == CHESS_COLOR_BLACK ? CHESS_COLOR_WHITE : CHESS_COLOR_BLACK);
+
+        result.gameState = GetGameState();
+        IncStepNumber();
     }
 
     return result;
@@ -114,6 +157,19 @@ IChessman* Deck::GetChessmanFromDeck(int number, int literNumber)
         }
     }
     return figure;
+}
+
+std::vector<IChessman*> Deck::GetKilledChessmen(ChessColor playerColor)
+{
+    std::vector<IChessman*> chessmen;
+
+    for (auto chessman : m_KilledChessmen)
+    {
+        if (chessman.first == playerColor)
+            chessmen.push_back((IChessman*)chessman.second);
+    }
+
+    return chessmen;
 }
 
 stringVector Deck::GetPossibleSteps(Chessman *pChessman)
@@ -369,7 +425,7 @@ stringVector Deck::GetPossibleCastlingSteps(CellPos &cellPos, Chessman *pChessma
         IDeckCell *pCell = nullptr;
         if (pRook1 && pRook1->GetChessmanStepNumber() == 0)
         {
-            pCell = GetCell(cells[0]);
+            pCell = pRook1->GetCurrentCell();
             if (pCell->GetCellPos().literNumber == 1)
                 bCastlingA = true;
             else if(pCell->GetCellPos().literNumber == 8)
@@ -378,7 +434,7 @@ stringVector Deck::GetPossibleCastlingSteps(CellPos &cellPos, Chessman *pChessma
 
         if (pRook2 && pRook2->GetChessmanStepNumber() == 0)
         {
-            pCell = GetCell(cells[1]);
+            pCell = pRook2->GetCurrentCell();
             if (pCell->GetCellPos().literNumber == 1)
                 bCastlingA = true;
             else if (pCell->GetCellPos().literNumber == 8)
@@ -504,7 +560,7 @@ stringVector Deck::GetPossiblePawnSteps(CellPos &cellPos, Chessman *pChessman)
         {
             pNeighborCell = GetCell(number, literNumber + offset);
             if (IsPawnEnPassanPossible(chessmanColor, pNeighborCell))
-                possibleSteps.push_back(pNeighborCell->GetCellName());
+                possibleSteps.push_back(pNeighborCell->GetCellName() + "!"); //kostyl
         }
     }
 
@@ -521,7 +577,7 @@ stringVector Deck::GetPossiblePawnSteps(CellPos &cellPos, Chessman *pChessman)
         {
             pNeighborCell = GetCell(number, literNumber - offset);
             if (IsPawnEnPassanPossible(chessmanColor, pNeighborCell))
-                possibleSteps.push_back(pNeighborCell->GetCellName());
+                possibleSteps.push_back(pNeighborCell->GetCellName() + "!"); //kostyl
         }
     }
 
@@ -791,7 +847,7 @@ bool Deck::IsCellOnFire(stringVector &rivalSteps, int number, int literNumber, C
 
 Chessman* Deck::RemoveFigure(std::string &cellName)
 {
-    if (cellName.size() < 2)
+    if (!EngineHelper::Instance().IsCoordinateCorrect(cellName))
         return nullptr;
 
     CellPos cellPos = EngineHelper::Instance().GetCellPos(cellName);
@@ -812,12 +868,15 @@ Chessman* Deck::RemoveFigure(int number, int literNumber)
         pRemovingChessman->SetKilled();
     }
 
-    return pRemovingChessman;  //delete figure need later
+    return pRemovingChessman;
 }
 
 bool Deck::MoveFigure(std::string &oldCellName, std::string &newCellName)
 {
-    if (oldCellName.size() < 2 || newCellName.size() < 2)
+    if (!EngineHelper::Instance().IsCoordinateCorrect(oldCellName))
+        return false;
+
+    if (!EngineHelper::Instance().IsCoordinateCorrect(newCellName))
         return false;
 
     CellPos oldCellPos = EngineHelper::Instance().GetCellPos(oldCellName);
@@ -828,12 +887,6 @@ bool Deck::MoveFigure(std::string &oldCellName, std::string &newCellName)
 
 bool Deck::MoveFigure(int oldNumber, int oldLiterNumber, int newNumber, int newLiterNumber)
 {
-    if (!EngineHelper::Instance().IsCoordinateCorrect(oldNumber, oldLiterNumber))
-        return false;
-
-    if (!EngineHelper::Instance().IsCoordinateCorrect(newNumber, newLiterNumber))
-        return false;
-
     Chessman *pChessman = (Chessman*)GetChessmanFromDeck(oldNumber, oldLiterNumber);
 
     if (pChessman == nullptr)

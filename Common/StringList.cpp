@@ -18,7 +18,7 @@ size_t stringVector::find_no_case(std::string item, size_t startPos)
     {
         std::string buffer(this->at(i));
         std::transform(buffer.begin(), buffer.end(), buffer.begin(), ::toupper);
-        if (buffer == item)
+        if (buffer.find(item) == 0)
         {
             pos = i;
             break;
