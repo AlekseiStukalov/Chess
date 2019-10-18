@@ -43,7 +43,7 @@ StepResult Deck::MakeStep(ChessColor playerColor, std::string &sOldPos, std::str
         return result;
 
 
-    stringVector possibleSteps = GetPossibleSteps(playerColor, sOldPos);
+    stringVector possibleSteps = GetPossibleSteps(sOldPos);
 
     if (possibleSteps.find_no_case(sNewPos) != std::string::npos)
     {
@@ -60,7 +60,7 @@ StepResult Deck::MakeStep(ChessColor playerColor, std::string &sOldPos, std::str
     return result;
 }
 
-stringVector Deck::GetPossibleSteps(ChessColor playerColor, std::string &cellName)
+stringVector Deck::GetPossibleSteps(std::string &cellName)
 {
     stringVector possibleSteps;
     IDeckCell *pCell = GetCell(cellName);
@@ -68,7 +68,7 @@ stringVector Deck::GetPossibleSteps(ChessColor playerColor, std::string &cellNam
     {
         Chessman *pChessman = (Chessman *)pCell->GetChessman();
 
-        if (pChessman && pChessman->GetChessmanColor() == playerColor)
+        if (pChessman)
             possibleSteps = GetPossibleSteps(pChessman);
     }
     return possibleSteps;
@@ -179,7 +179,7 @@ stringVector Deck::GetAllPossibleSteps(ChessColor nPlayerColor)
             {
                 if (pCell->GetChessman()->GetChessmanColor() == nPlayerColor)
                 {
-                    stringVector buffer = GetPossibleSteps(nPlayerColor, pCell->GetCellName());
+                    stringVector buffer = GetPossibleSteps(pCell->GetCellName());
                     possibleSteps.insert(possibleSteps.end(), buffer.begin(), buffer.end());
                 }
             }

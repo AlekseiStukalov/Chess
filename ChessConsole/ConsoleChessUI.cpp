@@ -54,7 +54,7 @@ void ConsoleChessUI::Start()
         StepResult stepRes;
 
         if (step.size() > 3)
-            stepRes = m_pDeck->MakeStep(CHESS_COLOR_WHITE, step.substr(0, 2), step.substr(2));
+            stepRes = m_pDeck->MakeStep(currentPlayerColor, step.substr(0, 2), step.substr(2));
 
         if (stepRes.gameState != Continue)
         {

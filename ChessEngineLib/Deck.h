@@ -17,7 +17,7 @@ public:
     /*
     *	All possible steps with cells, where this figure will be under attack
     */
-    virtual stringVector GetPossibleSteps(ChessColor playerColor, std::string &cellName);
+    virtual stringVector GetPossibleSteps(std::string &cellName);
     virtual IDeckCell* GetCell(std::string &cellName);
     virtual IDeckCell* GetCell(CellPos &cellPos);
     virtual IDeckCell* GetCell(int number, int literNumber);
