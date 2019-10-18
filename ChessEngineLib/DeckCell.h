@@ -17,11 +17,12 @@ public:
 
 	void SetCellColor(ChessColor color);
 	void SetChessman(Chessman *pChessman);
-	void SetCellName(std::string cellName);
+	void SetCellInfo(std::string cellName);
 
 protected:
 	ChessColor m_nCellColor;
 	std::string m_sCellName;
+	CellPos m_CellPos;
 	Chessman* m_pChessman;
 };
 

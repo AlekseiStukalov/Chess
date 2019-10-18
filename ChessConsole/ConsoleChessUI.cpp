@@ -23,7 +23,7 @@ void ConsoleChessUI::Start()
 {
 	ChessEngine engine;	
 	m_pDeck = engine.CreateDeck();
-
+	
 	//std::cout << "while player, enter name plz: ";
 	//m_WhitePlayer.m_sNickname = ConsoleHelper::ReadLine();
 
@@ -31,7 +31,7 @@ void ConsoleChessUI::Start()
 	//m_BlackPlayer.m_sNickname = ConsoleHelper::ReadLine();
 
 	std::cout << "Now lets play!";
-	std::this_thread::sleep_for(std::chrono::seconds(1));
+	std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
 	m_uiHelper.ClearScreen();
 
@@ -49,7 +49,7 @@ void ConsoleChessUI::Start()
 
 		std::cout << "Enter your step: " << std::endl;
 		std::string step = m_uiHelper.ReadLine();
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
 		StepResult stepRes;
 

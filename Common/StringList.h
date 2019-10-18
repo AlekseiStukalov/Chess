@@ -8,5 +8,5 @@ public:
     stringVector();
     ~stringVector();
 
-    size_t find(std::string item, size_t startPos = 0);
+    size_t find_no_case(std::string item, size_t startPos = 0);
 };
