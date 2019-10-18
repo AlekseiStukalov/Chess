@@ -128,14 +128,14 @@ stringVector Deck::GetPossibleSteps(Chessman *pChessman)
     case FigurePawn:
         possibleSteps = GetPossiblePawnSteps(cellPos, pChessman);
         break;
-    case FigureElephant:
+    case FigureBishop:
         possibleSteps = GetPossibleDiagonalSteps(cellPos, pChessman);
         break;
     case FigureKnight:
         possibleSteps = GetPossibleKnightSteps(cellPos, pChessman);
         //+рокировка
         break;
-    case FigureBoat:
+    case FigureRook:
         possibleSteps = GetPossibleStrightSteps(cellPos, pChessman);
         break;
     case FigureQueen:
@@ -320,9 +320,6 @@ stringVector Deck::GetPossibleKnightSteps(CellPos &cellPos, Chessman *pChessman)
             possibleSteps.push_back(pCell->GetCellName());
     }
 
-    //check for castling
-
-
     return possibleSteps;
 }
 
@@ -342,13 +339,15 @@ stringVector Deck::GetPossiblePawnSteps(CellPos &cellPos, Chessman *pChessman)
     if (pCell)
     {
         if (!pCell->GetChessman())
+        {
             possibleSteps.push_back(pCell->GetCellName());
 
-        if (pChessman->IsInitState())
-        {
-            pCell = (DeckCell*)GetCell(number + 2 * offset, literNumber);
-            if (!pCell->GetChessman())
-                possibleSteps.push_back(pCell->GetCellName());
+            if (pChessman->IsInitState())
+            {
+                pCell = (DeckCell*)GetCell(number + 2 * offset, literNumber);
+                if (!pCell->GetChessman())
+                    possibleSteps.push_back(pCell->GetCellName());
+            }
         }
     }
 
@@ -368,8 +367,6 @@ stringVector Deck::GetPossiblePawnSteps(CellPos &cellPos, Chessman *pChessman)
         if (pDiagChessman && pDiagChessman->GetChessmanColor() != chessmanColor)
             possibleSteps.push_back(pCell->GetCellName());
     }
-
-    //check for taking on the aisle
 
     return possibleSteps;
 }
@@ -441,7 +438,7 @@ ThreatToKing Deck::GetThreatToKing(stringVector &rivalSteps, ChessColor playerCo
     {
         bool bCellUnderAttack = false;
 
-        if (rivalSteps.find_no_case(kingSteps[i]) != -1)
+        if (rivalSteps.find_no_case(kingSteps[i]) != std::string::npos)
             bCellUnderAttack = true;
 
         if (!bCellUnderAttack)
@@ -452,7 +449,7 @@ ThreatToKing Deck::GetThreatToKing(stringVector &rivalSteps, ChessColor playerCo
 
     bool bKingUnderAttack = false;
 
-    if (rivalSteps.find_no_case(pKingCell->GetCellName()) != -1)
+    if (rivalSteps.find_no_case(pKingCell->GetCellName()) != std::string::npos)
         bKingUnderAttack = true;
 
     if (bKingUnderAttack)
@@ -519,13 +516,13 @@ void Deck::FillChessmenInitState()
     Chessman* pFigure = nullptr;
 
     std::vector<ChessmanValue> whiteChessmen = {
-        FigureBoat, FigureKnight, FigureElephant, FigureQueen,
-        FigureKing, FigureElephant, FigureKnight, FigureBoat
+        FigureRook, FigureKnight, FigureBishop, FigureQueen,
+        FigureKing, FigureBishop, FigureKnight, FigureRook
     };
 
     std::vector<ChessmanValue> blackChessmen = {
-        FigureBoat, FigureKnight, FigureElephant, FigureQueen,
-        FigureKing, FigureElephant, FigureKnight, FigureBoat
+        FigureRook, FigureKnight, FigureBishop, FigureQueen,
+        FigureKing, FigureBishop, FigureKnight, FigureRook
     };
 
     for (char i = 'A'; i <= 'H'; i++)
@@ -574,7 +571,7 @@ bool Deck::IsCellOnFire(stringVector &rivalSteps, std::string &cellName, ChessCo
     if (cellName.size() < 2)
         return false;
 
-    if (rivalSteps.find_no_case(cellName) != -1)
+    if (rivalSteps.find_no_case(cellName) != std::string::npos)
         return true;
 
     //?

@@ -15,7 +15,7 @@ Chessman::Chessman(ChessColor nChessmanColor, ChessmanValue nChessmanValue)
     m_bCanDoCastling = false;
     m_bKilled = false;
 
-    if (nChessmanValue == FigureKing || nChessmanValue == FigureBoat)
+    if (nChessmanValue == FigureKing || nChessmanValue == FigureRook)
         m_bCanDoCastling = true;
 }
 

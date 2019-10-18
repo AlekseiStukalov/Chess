@@ -12,9 +12,9 @@ enum ChessColor
 enum ChessmanValue
 {
     FigurePawn = 1, //Пешка
-    FigureElephant = 2, //Слон
+    FigureBishop = 2, //Слон
     FigureKnight = 3, //Конь
-    FigureBoat = 4, //Ладья
+    FigureRook = 4, //Ладья
     FigureQueen = 5, //Ферзь
     FigureKing = 6  //Король
 };

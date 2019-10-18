@@ -167,20 +167,20 @@ std::string ConsoleUIHelper::GetFigureName(ChessmanValue figureValue, int figure
         case FigurePawn:
             res.append("P");
             break;
-        case FigureElephant:
-            res.append("E");
+        case FigureBishop:
+            res.append("B");
             break;
         case FigureKnight:
-            res.append("K");
+            res.append("N");
             break;
-        case FigureBoat:
-            res.append("B");
+        case FigureRook:
+            res.append("R");
             break;
         case FigureQueen:
             res.append("Q");
             break;
         case FigureKing:
-            res.append("Kg");
+            res.append("K");
             break;
         default:
             break;
