@@ -32,7 +32,7 @@ std::string DeckCell::GetCellName()
 
 CellPos DeckCell::GetCellPos()
 {
-    return EngineHelper::Instance().GetCellPos(m_sCellName);
+    return m_CellPos;
 }
 
 void DeckCell::SetCellColor(ChessColor color)
@@ -45,7 +45,8 @@ void DeckCell::SetChessman(Chessman *pChessman)
     m_pChessman = pChessman;
 }
 
-void DeckCell::SetCellName(std::string cellName)
+void DeckCell::SetCellInfo(std::string &cellName)
 {
     m_sCellName = cellName;
+    m_CellPos = EngineHelper::Instance().GetCellPos(cellName);
 }

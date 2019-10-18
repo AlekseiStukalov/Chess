@@ -13,10 +13,10 @@ public:
     char GetLiterByNumber(int number);
 
     bool IsCoordinateCorrect(int number, int literNumber);
-    bool IsCoordinateCorrect(std::string cellName);
+    bool IsCoordinateCorrect(std::string &cellName);
 
     std::string GetCellName(int number, int literNumber);
-    CellPos GetCellPos(std::string cellName);
+    CellPos GetCellPos(std::string &cellName);
 
     static EngineHelper& Instance()
     {

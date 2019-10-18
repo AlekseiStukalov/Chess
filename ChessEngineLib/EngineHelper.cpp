@@ -49,7 +49,7 @@ bool EngineHelper::IsCoordinateCorrect(int number, int literNumber)
         return false;
 }
 
-bool EngineHelper::IsCoordinateCorrect(std::string cellName)
+bool EngineHelper::IsCoordinateCorrect(std::string &cellName)
 {
     if (cellName.size() < 2)
         return false;
@@ -68,12 +68,15 @@ std::string EngineHelper::GetCellName(int number, int literNumber)
     return cellName;
 }
 
-CellPos EngineHelper::GetCellPos(std::string cellName)
+CellPos EngineHelper::GetCellPos(std::string &cellName)
 {
     CellPos cellPos;
 
-    cellPos.number = (cellName[1] - '0');
-    cellPos.literNumber = EngineHelper::Instance().GetLiterNumber(cellName[0]);
+    if (cellName.size() >= 2)
+    {
+        cellPos.number = (cellName[1] - '0');
+        cellPos.literNumber = EngineHelper::Instance().GetLiterNumber(cellName[0]);
+    }
 
     return cellPos;
 }

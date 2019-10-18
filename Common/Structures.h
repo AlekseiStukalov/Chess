@@ -43,8 +43,10 @@ struct StepResult
 
 struct CellPos
 {
-    int literNumber;
+    CellPos() : number(0), literNumber(0) {}
+
     int number;
+    int literNumber;
 };
 
 enum ThreatToKing
