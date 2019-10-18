@@ -8,22 +8,22 @@
 class ConsoleUIHelper
 {
 public:
-	ConsoleUIHelper();
-	~ConsoleUIHelper() {};
+    ConsoleUIHelper();
+    ~ConsoleUIHelper() {};
 
-	std::string ReadLine();
-	void ClearScreen();
-	void PrintDeck(IDeck *pDeck, int nTargetPlayerColor);
+    std::string ReadLine();
+    void ClearScreen();
+    void PrintDeck(IDeck *pDeck, int nTargetPlayerColor);
 private:
-	std::string GetFigureName(ChessmanValue figureValue, int figureColor);
-	void PrintEmptyCell(int cellColor);
-	void PrintBottomTreshold();
-	void PrintTheTopTreshold();
-	void PrintChessmanCell(ChessmanValue figureValue, int figureColor, int cellColor);
+    std::string GetFigureName(ChessmanValue figureValue, int figureColor);
+    void PrintEmptyCell(int cellColor);
+    void PrintBottomTreshold();
+    void PrintTheTopTreshold();
+    void PrintChessmanCell(ChessmanValue figureValue, int figureColor, int cellColor);
 
-	char GetLiterByNumber(int number);
-	std::string GetCellName(int number, int literNumber);
+    char GetLiterByNumber(int number);
+    std::string GetCellName(int number, int literNumber);
 
-	std::string Liters;
+    std::string Liters;
 };
 

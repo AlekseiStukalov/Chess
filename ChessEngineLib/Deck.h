@@ -9,46 +9,46 @@
 class Deck : public IDeck
 {
 public:
-	Deck();
-	~Deck();
+    Deck();
+    ~Deck();
 
-	virtual StepResult MakeStep(ChessColor playerColor, std::string &sOldPos, std::string &sNewPos);
-	
-	/*
-	*	All possible steps with cells, where this figure will be under attack
-	*/
-	virtual stringVector GetPossibleSteps(ChessColor playerColor, std::string &cellName);
-	virtual IDeckCell* GetCell(std::string &cellName);
-	virtual IDeckCell* GetCell(CellPos &cellPos);
-	virtual IDeckCell* GetCell(int number, int literNumber);
-	virtual IChessman* GetChessmanFromDeck(int number, int literNumber);
+    virtual StepResult MakeStep(ChessColor playerColor, std::string &sOldPos, std::string &sNewPos);
+
+    /*
+    *	All possible steps with cells, where this figure will be under attack
+    */
+    virtual stringVector GetPossibleSteps(ChessColor playerColor, std::string &cellName);
+    virtual IDeckCell* GetCell(std::string &cellName);
+    virtual IDeckCell* GetCell(CellPos &cellPos);
+    virtual IDeckCell* GetCell(int number, int literNumber);
+    virtual IChessman* GetChessmanFromDeck(int number, int literNumber);
 
 protected:
-	stringVector GetPossibleSteps(Chessman *pChessman);
-	stringVector GetAllPossibleSteps(ChessColor nPlayerColor);
-	stringVector GetPossibleStrightSteps(CellPos &cellPos, Chessman *pChessman);
-	stringVector GetPossibleDiagonalSteps(CellPos &cellPos, Chessman *pChessman);
-	stringVector GetPossibleKnightSteps(CellPos &cellPos, Chessman *pChessman);
-	stringVector GetPossiblePawnSteps(CellPos &cellPos, Chessman *pChessman);
-	stringVector GetPossibleKingSteps(CellPos &cellPos, Chessman *pChessman);
+    stringVector GetPossibleSteps(Chessman *pChessman);
+    stringVector GetAllPossibleSteps(ChessColor nPlayerColor);
+    stringVector GetPossibleStrightSteps(CellPos &cellPos, Chessman *pChessman);
+    stringVector GetPossibleDiagonalSteps(CellPos &cellPos, Chessman *pChessman);
+    stringVector GetPossibleKnightSteps(CellPos &cellPos, Chessman *pChessman);
+    stringVector GetPossiblePawnSteps(CellPos &cellPos, Chessman *pChessman);
+    stringVector GetPossibleKingSteps(CellPos &cellPos, Chessman *pChessman);
 
-	ThreatToKing GetThreatToKing(stringVector &rivalSteps, ChessColor playerColor);
-	GameState GetGameState();
+    ThreatToKing GetThreatToKing(stringVector &rivalSteps, ChessColor playerColor);
+    GameState GetGameState();
 
-	void CreateDeck();
-	void FillChessmenInitState();
-	bool SetFigure(Chessman *pChessman, int number, int literNumber);
-	bool SetFigure(Chessman *pChessman, int number, char liter);
+    void CreateDeck();
+    void FillChessmenInitState();
+    bool SetFigure(Chessman *pChessman, int number, int literNumber);
+    bool SetFigure(Chessman *pChessman, int number, char liter);
 
-	bool IsCellOnFire(stringVector &rivalSteps, DeckCell *pCell, ChessColor playerColor);
-	bool IsCellOnFire(stringVector &rivalSteps, std::string &cellName, ChessColor playerColor);
-	bool IsCellOnFire(stringVector &rivalSteps, int number, int literNumber, ChessColor playerColor);
+    bool IsCellOnFire(stringVector &rivalSteps, DeckCell *pCell, ChessColor playerColor);
+    bool IsCellOnFire(stringVector &rivalSteps, std::string &cellName, ChessColor playerColor);
+    bool IsCellOnFire(stringVector &rivalSteps, int number, int literNumber, ChessColor playerColor);
 
-	Chessman* RemoveFigure(std::string &cellName);
-	Chessman* RemoveFigure(int number, int literNumber);
+    Chessman* RemoveFigure(std::string &cellName);
+    Chessman* RemoveFigure(int number, int literNumber);
 
-	bool MoveFigure(std::string &oldCellName, std::string &newCellName);
-	bool MoveFigure(int oldNumber, int oldLiterNumber, int newNumber, int newLiterNumber);
+    bool MoveFigure(std::string &oldCellName, std::string &newCellName);
+    bool MoveFigure(int oldNumber, int oldLiterNumber, int newNumber, int newLiterNumber);
     bool CanFigureStepToCell(DeckCell *pCell, ChessColor figureColor);
 
 protected:

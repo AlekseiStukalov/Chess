@@ -27,60 +27,60 @@ Chessman::~Chessman()
 
 IDeckCell* Chessman::GetCurrentCell()
 {
-	return m_pCurrentCell;
+    return m_pCurrentCell;
 }
 
 ChessColor Chessman::GetChessmanColor()
 {
-	return m_nChessmanColor;
+    return m_nChessmanColor;
 }
 
 ChessmanValue Chessman::GetChessmanValue()
 {
-	return m_nChessmanValue;
+    return m_nChessmanValue;
 }
 
 bool Chessman::IsInitState()
 {
-	return m_bInitState;
+    return m_bInitState;
 }
 
 bool Chessman::IsKilled()
 {
-	return m_bKilled;
+    return m_bKilled;
 }
 
 bool Chessman::CanDoCastling()
 {
-	return m_bCanDoCastling;
+    return m_bCanDoCastling;
 }
 
 void Chessman::SetCurrentCell(DeckCell *pCell)
 {
-	m_pCurrentCell = pCell;
+    m_pCurrentCell = pCell;
 }
 
 void Chessman::SetChessmanColor(ChessColor nColor)
 {
-	m_nChessmanColor = nColor;
+    m_nChessmanColor = nColor;
 }
 
 void Chessman::SetChessmanValue(ChessmanValue nValue)
 {
-	m_nChessmanValue = nValue;
+    m_nChessmanValue = nValue;
 }
 
 void Chessman::SetCanDoCastling(bool bCastling)
 {
-	m_bCanDoCastling = bCastling;
+    m_bCanDoCastling = bCastling;
 }
 
 void Chessman::SetKilled()
 {
-	m_bKilled = true;
+    m_bKilled = true;
 }
 
 void Chessman::ResetInitState()
 {
-	m_bInitState = false;
+    m_bInitState = false;
 }

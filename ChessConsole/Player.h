@@ -10,7 +10,7 @@ public:
     ~Player();
 
     int m_nPlayerColor;
-	std::string m_sNickname;
+    std::string m_sNickname;
 
     //std::vector<Chessman*> m_pRivalFigures;
 };

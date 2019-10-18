@@ -22,8 +22,8 @@ END_MESSAGE_MAP()
 
 CChessEngineLibApp::CChessEngineLibApp()
 {
-	// TODO: add construction code here,
-	// Place all significant initialization in InitInstance
+    // TODO: add construction code here,
+    // Place all significant initialization in InitInstance
 }
 
 
@@ -32,7 +32,7 @@ CChessEngineLibApp theApp;
 
 BOOL CChessEngineLibApp::InitInstance()
 {
-	CWinApp::InitInstance();
+    CWinApp::InitInstance();
 
-	return TRUE;
+    return TRUE;
 }

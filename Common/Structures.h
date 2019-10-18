@@ -5,18 +5,18 @@
 
 enum ChessColor
 {
-	CHESS_COLOR_BLACK = 1,
-	CHESS_COLOR_WHITE = 2
+    CHESS_COLOR_BLACK = 1,
+    CHESS_COLOR_WHITE = 2
 };
 
 enum ChessmanValue
 {
-	FigurePawn = 1, //Пешка
-	FigureElephant = 2, //Слон
-	FigureKnight = 3, //Конь
-	FigureBoat = 4, //Ладья
-	FigureQueen = 5, //Ферзь
-	FigureKing = 6  //Король
+    FigurePawn = 1, //Пешка
+    FigureElephant = 2, //Слон
+    FigureKnight = 3, //Конь
+    FigureBoat = 4, //Ладья
+    FigureQueen = 5, //Ферзь
+    FigureKing = 6  //Король
 };
 
 enum GameState
@@ -43,8 +43,10 @@ struct StepResult
 
 struct CellPos
 {
-    int literNumber;
+    CellPos() : number(0), literNumber(0) {}
+
     int number;
+    int literNumber;
 };
 
 enum ThreatToKing

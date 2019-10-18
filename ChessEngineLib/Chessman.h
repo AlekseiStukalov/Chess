@@ -13,25 +13,25 @@ public:
     Chessman(ChessColor nChessmanColor, ChessmanValue nChessmanValue);
     ~Chessman();
 
-	virtual IDeckCell* GetCurrentCell();
-	virtual ChessColor GetChessmanColor();
-	virtual ChessmanValue GetChessmanValue();
-	virtual bool IsInitState();
-	virtual bool IsKilled();
-	virtual bool CanDoCastling();
+    virtual IDeckCell* GetCurrentCell();
+    virtual ChessColor GetChessmanColor();
+    virtual ChessmanValue GetChessmanValue();
+    virtual bool IsInitState();
+    virtual bool IsKilled();
+    virtual bool CanDoCastling();
 
-	void SetCurrentCell(DeckCell *pCell);
-	void SetChessmanColor(ChessColor nColor);
-	void SetChessmanValue(ChessmanValue nValue);
-	void SetCanDoCastling(bool bCastling);
-	void SetKilled();
-	void ResetInitState();
+    void SetCurrentCell(DeckCell *pCell);
+    void SetChessmanColor(ChessColor nColor);
+    void SetChessmanValue(ChessmanValue nValue);
+    void SetCanDoCastling(bool bCastling);
+    void SetKilled();
+    void ResetInitState();
 
 protected:
 
     DeckCell *m_pCurrentCell;
 
-	ChessColor m_nChessmanColor;
+    ChessColor m_nChessmanColor;
     ChessmanValue m_nChessmanValue;
 
     bool m_bInitState;

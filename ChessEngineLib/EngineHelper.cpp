@@ -3,7 +3,7 @@
 
 ChessColor EngineHelper::GetCellColor(int number, int literNumber)
 {
-	ChessColor cellColor;
+    ChessColor cellColor;
 
     if (number > 0 && number <= 8 && literNumber > 0 && literNumber <= 8)
     {
@@ -29,9 +29,9 @@ ChessColor EngineHelper::GetCellColor(std::string cellName)
 int EngineHelper::GetLiterNumber(char liter)
 {
     int literNumber = 0;
-	liter = toupper(liter);
-	if (liter >= 'A' && liter <= 'H')
-		literNumber = liter - 'A' + 1;
+    liter = toupper(liter);
+    if (liter >= 'A' && liter <= 'H')
+        literNumber = liter - 'A' + 1;
 
     return literNumber;
 }
@@ -49,13 +49,13 @@ bool EngineHelper::IsCoordinateCorrect(int number, int literNumber)
         return false;
 }
 
-bool EngineHelper::IsCoordinateCorrect(std::string cellName)
+bool EngineHelper::IsCoordinateCorrect(std::string &cellName)
 {
-	if (cellName.size() < 2)
-		return false;
+    if (cellName.size() < 2)
+        return false;
 
-	CellPos cellPos = GetCellPos(cellName);
-	return IsCoordinateCorrect(cellPos.number, cellPos.literNumber);
+    CellPos cellPos = GetCellPos(cellName);
+    return IsCoordinateCorrect(cellPos.number, cellPos.literNumber);
 }
 
 std::string EngineHelper::GetCellName(int number, int literNumber)
@@ -63,17 +63,20 @@ std::string EngineHelper::GetCellName(int number, int literNumber)
     std::string cellName;
 
     cellName += GetLiterByNumber(literNumber);
-	cellName += (char)(number + '0');
+    cellName += (char)(number + '0');
 
     return cellName;
 }
 
-CellPos EngineHelper::GetCellPos(std::string cellName)
+CellPos EngineHelper::GetCellPos(std::string &cellName)
 {
     CellPos cellPos;
 
-	cellPos.number = (cellName[1] - '0');
-	cellPos.literNumber = EngineHelper::Instance().GetLiterNumber(cellName[0]);
+    if (cellName.size() >= 2)
+    {
+        cellPos.number = (cellName[1] - '0');
+        cellPos.literNumber = EngineHelper::Instance().GetLiterNumber(cellName[0]);
+    }
 
     return cellPos;
 }
