@@ -29,11 +29,15 @@ protected:
     stringVector GetPossibleStrightSteps(CellPos &cellPos, Chessman *pChessman);
     stringVector GetPossibleDiagonalSteps(CellPos &cellPos, Chessman *pChessman);
     stringVector GetPossibleKnightSteps(CellPos &cellPos, Chessman *pChessman);
+    stringVector GetPossibleCastlingSteps(CellPos &cellPos, Chessman *pChessman);
     stringVector GetPossiblePawnSteps(CellPos &cellPos, Chessman *pChessman);
     stringVector GetPossibleKingSteps(CellPos &cellPos, Chessman *pChessman);
+    bool IsPawnEnPassanPossible(ChessColor currentPawnColor, IDeckCell *pNeighborCell);
 
     ThreatToKing GetThreatToKing(stringVector &rivalSteps, ChessColor playerColor);
     GameState GetGameState();
+
+    stringVector FindFigureOnDeck(ChessmanValue chessman, ChessColor playerColor);
 
     void CreateDeck();
     void FillChessmenInitState();
@@ -51,7 +55,11 @@ protected:
     bool MoveFigure(int oldNumber, int oldLiterNumber, int newNumber, int newLiterNumber);
     bool CanFigureStepToCell(DeckCell *pCell, ChessColor figureColor);
 
+    size_t GetStepNumber();
+    void IncStepNumber();
+
 protected:
     std::vector<std::vector<DeckCell>> m_ChessDeck;     /// [number][literNumber]
+    size_t m_nStepNumber;
 };
 

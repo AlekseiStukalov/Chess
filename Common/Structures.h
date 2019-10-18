@@ -44,6 +44,13 @@ struct StepResult
 struct CellPos
 {
     CellPos() : number(0), literNumber(0) {}
+    bool operator==(CellPos &obj)
+    {
+        return (
+            this->number == obj.number
+            && this->literNumber == obj.literNumber
+            );
+    }
 
     int number;
     int literNumber;

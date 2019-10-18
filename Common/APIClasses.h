@@ -18,9 +18,7 @@ public:
     virtual IDeckCell* GetCurrentCell() = 0;
     virtual ChessColor GetChessmanColor() = 0;
     virtual ChessmanValue GetChessmanValue() = 0;
-    virtual bool IsInitState() = 0;
     virtual bool IsKilled() = 0;
-    virtual bool CanDoCastling() = 0;
 };
 
 class IDeckCell

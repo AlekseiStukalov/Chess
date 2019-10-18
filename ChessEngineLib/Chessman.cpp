@@ -11,12 +11,8 @@ Chessman::Chessman(ChessColor nChessmanColor, ChessmanValue nChessmanValue)
     m_pCurrentCell = nullptr;
     m_nChessmanColor = nChessmanColor;
     m_nChessmanValue = nChessmanValue;
-    m_bInitState = true;
-    m_bCanDoCastling = false;
     m_bKilled = false;
-
-    if (nChessmanValue == FigureKing || nChessmanValue == FigureRook)
-        m_bCanDoCastling = true;
+    m_nChessmanStepNumber = 0;
 }
 
 
@@ -40,19 +36,9 @@ ChessmanValue Chessman::GetChessmanValue()
     return m_nChessmanValue;
 }
 
-bool Chessman::IsInitState()
-{
-    return m_bInitState;
-}
-
 bool Chessman::IsKilled()
 {
     return m_bKilled;
-}
-
-bool Chessman::CanDoCastling()
-{
-    return m_bCanDoCastling;
 }
 
 void Chessman::SetCurrentCell(DeckCell *pCell)
@@ -70,17 +56,17 @@ void Chessman::SetChessmanValue(ChessmanValue nValue)
     m_nChessmanValue = nValue;
 }
 
-void Chessman::SetCanDoCastling(bool bCastling)
-{
-    m_bCanDoCastling = bCastling;
-}
-
 void Chessman::SetKilled()
 {
     m_bKilled = true;
 }
 
-void Chessman::ResetInitState()
+int Chessman::GetChessmanStepNumber()
 {
-    m_bInitState = false;
+    return m_nChessmanStepNumber;
+}
+
+void Chessman::IncChessmanStepNumber()
+{
+    m_nChessmanStepNumber++;
 }
