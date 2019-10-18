@@ -125,32 +125,32 @@ stringVector Deck::GetPossibleSteps(Chessman *pChessman)
 
     switch (pChessman->GetChessmanValue())
     {
-        case FigurePawn:
-            possibleSteps = GetPossiblePawnSteps(cellPos, pChessman);
-            break;
-        case FigureElephant:
-            possibleSteps = GetPossibleDiagonalSteps(cellPos, pChessman);
-            break;
-        case FigureKnight:
-            possibleSteps = GetPossibleKnightSteps(cellPos, pChessman);
-            //+рокировка
-            break;
-        case FigureBoat:
-            possibleSteps = GetPossibleStrightSteps(cellPos, pChessman);
-            break;
-        case FigureQueen:
-        {
-            stringVector diagonalSteps = GetPossibleDiagonalSteps(cellPos, pChessman);
-            possibleSteps = GetPossibleStrightSteps(cellPos, pChessman);
-            possibleSteps.insert(possibleSteps.end(), diagonalSteps.begin(), diagonalSteps.end());
-            break;
-        }
-        case FigureKing:
-            possibleSteps = GetPossibleKingSteps(cellPos, pChessman);
-            //+рокировка
-            break;
-        default:
-            break;
+    case FigurePawn:
+        possibleSteps = GetPossiblePawnSteps(cellPos, pChessman);
+        break;
+    case FigureElephant:
+        possibleSteps = GetPossibleDiagonalSteps(cellPos, pChessman);
+        break;
+    case FigureKnight:
+        possibleSteps = GetPossibleKnightSteps(cellPos, pChessman);
+        //+рокировка
+        break;
+    case FigureBoat:
+        possibleSteps = GetPossibleStrightSteps(cellPos, pChessman);
+        break;
+    case FigureQueen:
+    {
+        stringVector diagonalSteps = GetPossibleDiagonalSteps(cellPos, pChessman);
+        possibleSteps = GetPossibleStrightSteps(cellPos, pChessman);
+        possibleSteps.insert(possibleSteps.end(), diagonalSteps.begin(), diagonalSteps.end());
+        break;
+    }
+    case FigureKing:
+        possibleSteps = GetPossibleKingSteps(cellPos, pChessman);
+        //+рокировка
+        break;
+    default:
+        break;
     }
 
 
@@ -332,42 +332,42 @@ stringVector Deck::GetPossiblePawnSteps(CellPos &cellPos, Chessman *pChessman)
     if (!pChessman)
         return possibleSteps;
 
-	int number = cellPos.number;
-	int literNumber = cellPos.literNumber;
-	ChessColor chessmanColor = pChessman->GetChessmanColor();
-	int offset = (chessmanColor == CHESS_COLOR_BLACK ? -1 : 1);
+    int number = cellPos.number;
+    int literNumber = cellPos.literNumber;
+    ChessColor chessmanColor = pChessman->GetChessmanColor();
+    int offset = (chessmanColor == CHESS_COLOR_BLACK ? -1 : 1);
 
-	DeckCell *pCell = nullptr;
-	pCell = (DeckCell*)GetCell(number + offset, literNumber);
-	if (pCell)
-	{
-		if (!pCell->GetChessman())
-			possibleSteps.push_back(pCell->GetCellName());
+    DeckCell *pCell = nullptr;
+    pCell = (DeckCell*)GetCell(number + offset, literNumber);
+    if (pCell)
+    {
+        if (!pCell->GetChessman())
+            possibleSteps.push_back(pCell->GetCellName());
 
-		if (pChessman->IsInitState())
-		{
-			pCell = (DeckCell*)GetCell(number + 2*offset, literNumber);
-			if (!pCell->GetChessman())
-				possibleSteps.push_back(pCell->GetCellName());
-		}
-	}
+        if (pChessman->IsInitState())
+        {
+            pCell = (DeckCell*)GetCell(number + 2 * offset, literNumber);
+            if (!pCell->GetChessman())
+                possibleSteps.push_back(pCell->GetCellName());
+        }
+    }
 
-	IChessman *pDiagChessman = nullptr;
-	pCell = (DeckCell*)GetCell(number + offset, literNumber + offset);
-	if (pCell)
-	{
-		pDiagChessman = pCell->GetChessman();
-		if (pDiagChessman && pDiagChessman->GetChessmanColor() != chessmanColor)
-			possibleSteps.push_back(pCell->GetCellName());
-	}
+    IChessman *pDiagChessman = nullptr;
+    pCell = (DeckCell*)GetCell(number + offset, literNumber + offset);
+    if (pCell)
+    {
+        pDiagChessman = pCell->GetChessman();
+        if (pDiagChessman && pDiagChessman->GetChessmanColor() != chessmanColor)
+            possibleSteps.push_back(pCell->GetCellName());
+    }
 
-	pCell = (DeckCell*)GetCell(number + offset, literNumber - offset);
-	if (pCell)
-	{
-		pDiagChessman = pCell->GetChessman();
-		if (pDiagChessman && pDiagChessman->GetChessmanColor() != chessmanColor)
-			possibleSteps.push_back(pCell->GetCellName());
-	}
+    pCell = (DeckCell*)GetCell(number + offset, literNumber - offset);
+    if (pCell)
+    {
+        pDiagChessman = pCell->GetChessman();
+        if (pDiagChessman && pDiagChessman->GetChessmanColor() != chessmanColor)
+            possibleSteps.push_back(pCell->GetCellName());
+    }
 
     //check for taking on the aisle
 
@@ -639,17 +639,17 @@ bool Deck::MoveFigure(int oldNumber, int oldLiterNumber, int newNumber, int newL
     if (pChessman == nullptr)
         return false;
 
-	DeckCell *pOldCell = nullptr, *pNewCell = nullptr;
+    DeckCell *pOldCell = nullptr, *pNewCell = nullptr;
 
-	pOldCell = (DeckCell*)pChessman->GetCurrentCell();
-	pNewCell = (DeckCell*)GetCell(newNumber, newLiterNumber);
+    pOldCell = (DeckCell*)pChessman->GetCurrentCell();
+    pNewCell = (DeckCell*)GetCell(newNumber, newLiterNumber);
 
-	if (pOldCell && pNewCell)
-	{
-		pOldCell->SetChessman(nullptr);
-		pNewCell->SetChessman(pChessman);
-		pChessman->SetCurrentCell(pNewCell);
-		pChessman->ResetInitState();
+    if (pOldCell && pNewCell)
+    {
+        pOldCell->SetChessman(nullptr);
+        pNewCell->SetChessman(pChessman);
+        pChessman->SetCurrentCell(pNewCell);
+        pChessman->ResetInitState();
 
         return true;
     }
