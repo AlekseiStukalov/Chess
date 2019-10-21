@@ -14,7 +14,11 @@ enum MakeStepError
     E_CAN_NOT_MOVE_OPPOSITE_CHESSMAN,
     E_CAN_NOT_MOVE_TO_CELL,
     E_NO_PAWN_EN_PASSAN,
-    E_NO_ROOK_CASTLING
+    E_NO_ROOK_CASTLING,
+    E_CAN_NOT_REPLACE_THIS_CHESSMAN, //this is not a pawn
+    E_WRONG_PAWN_POSITION_FOR_RESPAWN,
+    E_WRONG_NEW_CHESSMAN_NAME_FOR_RESPAWN,
+    E_CAN_NOT_RESPAWN_THIS_CHESSMAN, //new chessman still alive
 };
 
 enum ChessColor
@@ -41,6 +45,14 @@ enum GameState
     Continue = 4
 };
 
+enum ThreatToKing
+{
+    Check = 1,
+    CheckMate,
+    Stalemate,
+    None
+};
+
 struct StepResult
 {
     StepResult()
@@ -49,10 +61,11 @@ struct StepResult
         gameState = GameState::Continue;
     }
 
+    std::string respawnCellName;
     GameState gameState;
     MakeStepError nError;
 
-    int nNextPlayerColor;
+    ChessColor nNextPlayerColor;
 };
 
 struct CellPos
@@ -70,13 +83,5 @@ struct CellPos
 
     int Number;
     int LiterNumber;
-};
-
-enum ThreatToKing
-{
-    Check = 1,
-    CheckMate,
-    Stalemate,
-    None
 };
 

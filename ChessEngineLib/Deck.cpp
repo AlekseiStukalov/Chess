@@ -155,6 +155,17 @@ StepResult Deck::DoMakeStep(ChessColor playerColor, std::string &sOldPos, std::s
         result.nError = E_NO_ERROR;
         result.nNextPlayerColor = (playerColor == CHESS_COLOR_BLACK ? CHESS_COLOR_WHITE : CHESS_COLOR_BLACK);
 
+        IChessman* pChessmanNewPos = GetCell(sNewPos)->GetChessman();
+        if (pChessmanNewPos->GetChessmanValue() == FigurePawn)
+        {
+            if ((newCellPos.Number == 8 && playerColor == CHESS_COLOR_WHITE) ||
+                (newCellPos.Number == 1 && playerColor == CHESS_COLOR_BLACK))
+            {
+                result.nNextPlayerColor = playerColor;
+                result.respawnCellName = sNewPos;
+            }
+        }
+
         result.gameState = GetGameState();
         IncStepNumber();
     }
@@ -231,6 +242,65 @@ std::vector<IChessman*> Deck::GetKilledChessmen(ChessColor playerColor)
     return chessmen;
 }
 
+StepResult Deck::PawnRespawn(ChessColor playerColor, std::string &sPos, std::string &sChessmanName)
+{
+    StepResult result;
+    result.nNextPlayerColor = playerColor;
+    result.respawnCellName = sPos;
+
+    if (!EngineHelper::Instance().IsCoordinateCorrect(sPos))
+    {
+        result.nError = E_WRONG_START_CELL;
+        return result;
+    }
+
+    CellPos cellPos = EngineHelper::Instance().GetCellPos(sPos);
+
+    DeckCell *pCell = (DeckCell*)GetCell(cellPos);
+    Chessman* pChessman = (Chessman*)pCell->GetChessman();
+    if (pChessman)
+    {
+        if (pChessman->GetChessmanValue() == FigurePawn)
+        {
+            if ((cellPos.Number == 8 && playerColor == CHESS_COLOR_WHITE) ||
+                (cellPos.Number == 1 && playerColor == CHESS_COLOR_BLACK))
+            {
+                ChessmanValue respawnChessmanValue;
+                if (EngineHelper::Instance().GetChessmanValueByName(respawnChessmanValue, sChessmanName))
+                {
+                    auto it = std::find_if(m_KilledChessmen.begin(), m_KilledChessmen.end(),
+                        [&playerColor, &respawnChessmanValue](auto &chessman) {
+                        return (playerColor == chessman.first && respawnChessmanValue == chessman.second->GetChessmanValue());
+                    });
+
+                    if (it != m_KilledChessmen.end())
+                    {
+                        Chessman *pDeadChessman = (*it).second;
+                        (*it).second = pChessman;
+                        pCell->SetChessman(pDeadChessman);
+
+                        result.respawnCellName.clear();
+                        result.nNextPlayerColor = (playerColor == CHESS_COLOR_BLACK ? CHESS_COLOR_WHITE : CHESS_COLOR_BLACK);
+                        result.gameState = GetGameState();
+                    }
+                    else
+                        result.nError = E_CAN_NOT_RESPAWN_THIS_CHESSMAN;
+                }
+                else
+                    result.nError = E_WRONG_NEW_CHESSMAN_NAME_FOR_RESPAWN;
+            }
+            else
+                result.nError = E_WRONG_PAWN_POSITION_FOR_RESPAWN;
+        }
+        else
+            result.nError = E_CAN_NOT_REPLACE_THIS_CHESSMAN;
+    }
+    else
+        result.nError = E_START_CELL_HAVE_NO_CHESSMAN;
+
+    return result;
+}
+
 stringVector Deck::GetPossibleSteps(Chessman *pChessman)
 {
     stringVector possibleSteps;
@@ -286,12 +356,15 @@ stringVector Deck::GetAllPossibleSteps(ChessColor nPlayerColor)
         for (int j = 0; j < 8; j++)
         {
             pCell = &m_ChessDeck[i][j];
-            if (pCell->GetChessman())
+            Chessman *pChessman = (Chessman *)pCell->GetChessman();
+            if (pChessman && pChessman->GetChessmanColor() == nPlayerColor)
             {
-                if (pCell->GetChessman()->GetChessmanColor() == nPlayerColor)
+                stringVector buffer = GetPossibleSteps(pChessman);
+
+                for (int k = 0; k < buffer.size(); k++)
                 {
-                    stringVector buffer = GetPossibleSteps(pCell->GetCellName());
-                    possibleSteps.insert(possibleSteps.end(), buffer.begin(), buffer.end());
+                    if (possibleSteps.find_no_case(buffer[k]) == std::string::npos)
+                        possibleSteps.push_back(buffer[k]);
                 }
             }
         }
@@ -618,20 +691,12 @@ stringVector Deck::GetPossibleKingSteps(CellPos &cellPos, Chessman *pChessman)
     int number = cellPos.Number;
     int literNumber = cellPos.LiterNumber;
 
-    std::vector<std::pair<int, int>> offsets; //liter, number
-    offsets.push_back(std::make_pair(1, 1));
-    offsets.push_back(std::make_pair(1, 0));
-    offsets.push_back(std::make_pair(1, -1));
-    offsets.push_back(std::make_pair(0, -1));
-    offsets.push_back(std::make_pair(-1, -1));
-    offsets.push_back(std::make_pair(-1, 0));
-    offsets.push_back(std::make_pair(-1, 1));
-    offsets.push_back(std::make_pair(0, 1));
+    std::vector<std::pair<int, int>> offsets = EngineHelper::Instance().GetKingOffsets(); //number, liter
 
     for (size_t i = 0; i < offsets.size(); i++)
     {
-        int numberPos = number + offsets[i].second;
-        int literNumberPos = literNumber + offsets[i].first;
+        int numberPos = number + offsets[i].first;
+        int literNumberPos = literNumber + offsets[i].second;
 
         DeckCell *pCell = (DeckCell*)GetCell(numberPos, literNumberPos);
         if (CanFigureStepToCell(pCell, pChessman->GetChessmanColor()))
@@ -663,6 +728,37 @@ bool Deck::IsPawnEnPassanPossible(ChessColor currentPawnColor, IDeckCell *pNeigh
     return false;
 }
 
+
+
+
+
+bool Deck::IsCellOnFire(stringVector &rivalSteps, DeckCell *pCell, ChessColor playerColor)
+{
+    if (pCell)
+        return IsCellOnFire(rivalSteps, pCell->GetCellName(), playerColor);
+    return false;
+}
+
+bool Deck::IsCellOnFire(stringVector &rivalSteps, std::string &cellName, ChessColor playerColor)
+{
+    if (cellName.size() < 2)
+        return false;
+
+    if (rivalSteps.find_no_case(cellName) != std::string::npos)
+        return true;
+
+    //?
+
+    return false;
+}
+
+bool Deck::IsCellOnFire(stringVector &rivalSteps, int number, int literNumber, ChessColor playerColor)
+{
+    std::string cellName = EngineHelper::Instance().GetCellName(number, literNumber);
+
+    return IsCellOnFire(rivalSteps, cellName, playerColor);
+}
+
 ThreatToKing Deck::GetThreatToKing(stringVector &rivalSteps, ChessColor playerColor)
 {
     IDeckCell *pKingCell = nullptr;
@@ -683,7 +779,8 @@ ThreatToKing Deck::GetThreatToKing(stringVector &rivalSteps, ChessColor playerCo
         }
     }
 
-    stringVector kingSteps = GetPossibleKingSteps(pKingCell->GetCellPos(), pKingChessman);
+    CellPos kingPos = pKingCell->GetCellPos();
+    stringVector kingSteps = GetPossibleKingSteps(kingPos, pKingChessman);
 
     stringVector freeCells;
     for (size_t i = 0; i < kingSteps.size(); i++)
@@ -712,15 +809,48 @@ ThreatToKing Deck::GetThreatToKing(stringVector &rivalSteps, ChessColor playerCo
             threat = ThreatToKing::Check;
     }
     else
-        threat = ThreatToKing::None;
-
-    if (threat == ThreatToKing::CheckMate)
     {
+        if (freeCells.size() == 0)
+            threat = ThreatToKing::Stalemate;
+        else
+            threat = ThreatToKing::None;
+    }
+
+    if (threat == ThreatToKing::CheckMate || threat == ThreatToKing::Stalemate)
+    {
+        //check: if king surrounded fully and there are friendly figures exists -> threat = None
+        if (threat == ThreatToKing::Stalemate)
+        {
+            bool bOtherFiguresExists = (GetKilledChessmen(playerColor).size() < 15);
+            bool bHaveFreeCellAround = false;
+
+            std::vector<std::pair<int, int>> offsets = EngineHelper::Instance().GetKingOffsets(); //number, liter
+            for (size_t i = 0; i < offsets.size(); i++)
+            {
+                IDeckCell *pCell = GetCell(kingPos.Number + offsets[i].first, kingPos.LiterNumber + offsets[i].second);
+                if (pCell && !pCell->GetChessman())
+                {
+                    bHaveFreeCellAround = true;
+                    break;
+                }
+            }
+
+            if (!bHaveFreeCellAround && bOtherFiguresExists)
+                threat = ThreatToKing::None;
+        }
         //check: if anyone can protect -> threat = Check
+        else
+        {
+
+        }
     }
 
     return threat;
 }
+
+
+
+ 
 
 GameState Deck::GetGameState()
 {
@@ -768,7 +898,6 @@ stringVector Deck::FindFigureOnDeck(ChessmanValue chessman, ChessColor playerCol
 
     return cells;
 }
-
 
 void Deck::CreateDeck()
 {
@@ -833,33 +962,6 @@ bool Deck::SetFigure(Chessman *pChessman, int number, int literNumber)
 bool Deck::SetFigure(Chessman *pChessman, int number, char liter)
 {
     return SetFigure(pChessman, number, (int)(liter - 'A' + 1));
-}
-
-bool Deck::IsCellOnFire(stringVector &rivalSteps, DeckCell *pCell, ChessColor playerColor)
-{
-    if (pCell)
-        return IsCellOnFire(rivalSteps, pCell->GetCellName(), playerColor);
-    return false;
-}
-
-bool Deck::IsCellOnFire(stringVector &rivalSteps, std::string &cellName, ChessColor playerColor)
-{
-    if (cellName.size() < 2)
-        return false;
-
-    if (rivalSteps.find_no_case(cellName) != std::string::npos)
-        return true;
-
-    //?
-
-    return false;
-}
-
-bool Deck::IsCellOnFire(stringVector &rivalSteps, int number, int literNumber, ChessColor playerColor)
-{
-    std::string cellName = EngineHelper::Instance().GetCellName(number, literNumber);
-
-    return IsCellOnFire(rivalSteps, cellName, playerColor);
 }
 
 Chessman* Deck::RemoveFigure(CellPos &cellPos)

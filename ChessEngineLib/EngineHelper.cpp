@@ -80,3 +80,44 @@ CellPos EngineHelper::GetCellPos(std::string &cellName)
 
     return cellPos;
 }
+
+bool EngineHelper::GetChessmanValueByName(ChessmanValue &value, std::string &name)
+{
+    if (name.size() < 1)
+        return false;
+
+    char letter = name[0];
+    letter = ::toupper(letter);
+
+    if (letter == 'K')
+        value = ChessmanValue::FigureKing;
+    else if (letter == 'Q')
+        value = ChessmanValue::FigureQueen;
+    else if (letter == 'R')
+        value = ChessmanValue::FigureRook;
+    else if (letter == 'N')
+        value = ChessmanValue::FigureKnight;
+    else if (letter == 'B')
+        value = ChessmanValue::FigureBishop;
+    else if (letter == 'P')
+        value = ChessmanValue::FigurePawn;
+    else
+        return false;
+
+    return true;
+}
+
+std::vector<std::pair<int, int>> EngineHelper::GetKingOffsets()
+{
+    std::vector<std::pair<int, int>> offsets; //number, liter
+    offsets.push_back(std::make_pair(1, 1));
+    offsets.push_back(std::make_pair(1, 0));
+    offsets.push_back(std::make_pair(1, -1));
+    offsets.push_back(std::make_pair(0, 1));
+    offsets.push_back(std::make_pair(0, -1));
+    offsets.push_back(std::make_pair(-1, 1));
+    offsets.push_back(std::make_pair(-1, 0));
+    offsets.push_back(std::make_pair(-1, -1));
+
+    return offsets;
+}

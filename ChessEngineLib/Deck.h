@@ -22,6 +22,7 @@ public:
     virtual IDeckCell* GetCell(int number, int literNumber);
     virtual IChessman* GetChessmanFromDeck(int number, int literNumber);
     virtual std::vector<IChessman*> GetKilledChessmen(ChessColor playerColor);
+    virtual StepResult PawnRespawn(ChessColor playerColor, std::string &sPos, std::string &sChessmanName);
 
 protected:
     StepResult DoMakeStep(ChessColor playerColor, std::string &sOldPos, std::string &sNewPos);
@@ -35,6 +36,10 @@ protected:
     stringVector GetPossibleKingSteps(CellPos &cellPos, Chessman *pChessman);
     bool IsPawnEnPassanPossible(ChessColor currentPawnColor, IDeckCell *pNeighborCell);
 
+    bool IsCellOnFire(stringVector &rivalSteps, DeckCell *pCell, ChessColor playerColor);
+    bool IsCellOnFire(stringVector &rivalSteps, std::string &cellName, ChessColor playerColor);
+    bool IsCellOnFire(stringVector &rivalSteps, int number, int literNumber, ChessColor playerColor);
+
     ThreatToKing GetThreatToKing(stringVector &rivalSteps, ChessColor playerColor);
     GameState GetGameState();
 
@@ -44,10 +49,6 @@ protected:
     void FillChessmenInitState();
     bool SetFigure(Chessman *pChessman, int number, int literNumber);
     bool SetFigure(Chessman *pChessman, int number, char liter);
-
-    bool IsCellOnFire(stringVector &rivalSteps, DeckCell *pCell, ChessColor playerColor);
-    bool IsCellOnFire(stringVector &rivalSteps, std::string &cellName, ChessColor playerColor);
-    bool IsCellOnFire(stringVector &rivalSteps, int number, int literNumber, ChessColor playerColor);
 
     Chessman* RemoveFigure(CellPos &cellPos);
     bool MoveFigure(CellPos &oldCellPos, CellPos &newCellPos);

@@ -40,4 +40,5 @@ public:
     virtual IDeckCell* GetCell(int number, int literNumber) = 0;
     virtual IChessman* GetChessmanFromDeck(int number, int literNumber) = 0;
     virtual std::vector<IChessman*> GetKilledChessmen(ChessColor playerColor) = 0;
+    virtual StepResult PawnRespawn(ChessColor playerColor, std::string &sPos, std::string &sChessmanName) = 0;
 };
