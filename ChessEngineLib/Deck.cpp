@@ -123,7 +123,6 @@ StepResult Deck::DoMakeStep(ChessColor playerColor, std::string &sOldPos, std::s
         m_KilledChessmen.push_back(std::make_pair(pEnemyChessman->GetChessmanColor(), (Chessman*)pEnemyChessman));
     }
 
-    //castling
     if (sNewPos.back() == CASTLING_SIGN)
     {
         int number = (playerColor == CHESS_COLOR_WHITE ? 1 : 8);
@@ -148,10 +147,10 @@ StepResult Deck::DoMakeStep(ChessColor playerColor, std::string &sOldPos, std::s
             MoveFigure(oldRookPos, newRookPos);
         }
         else
-            result.nError = E_NOR_ROOK_CASTLING;
+            result.nError = E_NO_ROOK_CASTLING;
     }
 
-    if (result.nError && MoveFigure(oldCellPos, newCellPos))
+    if (!result.nError && MoveFigure(oldCellPos, newCellPos))
     {
         result.nError = E_NO_ERROR;
         result.nNextPlayerColor = (playerColor == CHESS_COLOR_BLACK ? CHESS_COLOR_WHITE : CHESS_COLOR_BLACK);
@@ -585,7 +584,7 @@ stringVector Deck::GetPossiblePawnSteps(CellPos &cellPos, Chessman *pChessman)
         {
             pNeighborCell = GetCell(number, literNumber + offset);
             if (IsPawnEnPassanPossible(chessmanColor, pNeighborCell))
-                possibleSteps.push_back(pNeighborCell->GetCellName() + EN_PASSAN_SIGN_STR);
+                possibleSteps.push_back(pCell->GetCellName() + EN_PASSAN_SIGN_STR);
         }
     }
 
@@ -602,7 +601,7 @@ stringVector Deck::GetPossiblePawnSteps(CellPos &cellPos, Chessman *pChessman)
         {
             pNeighborCell = GetCell(number, literNumber - offset);
             if (IsPawnEnPassanPossible(chessmanColor, pNeighborCell))
-                possibleSteps.push_back(pNeighborCell->GetCellName() + EN_PASSAN_SIGN_STR);
+                possibleSteps.push_back(pCell->GetCellName() + EN_PASSAN_SIGN_STR);
         }
     }
 

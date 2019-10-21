@@ -14,7 +14,7 @@ enum MakeStepError
     E_CAN_NOT_MOVE_OPPOSITE_CHESSMAN,
     E_CAN_NOT_MOVE_TO_CELL,
     E_NO_PAWN_EN_PASSAN,
-    E_NOR_ROOK_CASTLING
+    E_NO_ROOK_CASTLING
 };
 
 enum ChessColor

@@ -39,28 +39,50 @@ void ConsoleChessUI::Start()
 
     while (true)
     {
+        std::vector<IChessman *> killedWhite = m_pDeck->GetKilledChessmen(CHESS_COLOR_WHITE);
+        std::vector<IChessman *> killedBlack = m_pDeck->GetKilledChessmen(CHESS_COLOR_BLACK);
+
+        std::cout << "White kills : ";
+        for (int i = 0; i < killedBlack.size(); i++)
+            std::cout << m_uiHelper.GetFigureName(killedBlack[i]->GetChessmanValue(), CHESS_COLOR_BLACK) << " ";
+
+        std::cout << std::endl << "Black kills : ";
+        for (int i = 0; i < killedWhite.size(); i++)
+            std::cout << m_uiHelper.GetFigureName(killedWhite[i]->GetChessmanValue(), CHESS_COLOR_WHITE) << " ";
+        std::cout << std::endl;
+
+
         if (currentPlayerColor == CHESS_COLOR_WHITE)
-            std::cout << "White ";
+            std::cout << "White [" << WHITE_CHAR_CENTER << "] ";
         else
-            std::cout << "Black ";
+            std::cout << "Black [ ] ";
 
         std::cout << "player turn:" << std::endl;
         m_uiHelper.PrintDeck(m_pDeck, currentPlayerColor);
 
-        std::cout << "Enter your step: " << std::endl;
-        std::string step = m_uiHelper.ReadLine();
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::cout << "Enter your step (q! to exit): ";
+        std::string stepStr = m_uiHelper.ReadLine();
 
-        StepResult stepRes;
+        if(stepStr.compare("q!") == 0)
+            break;
 
-        if (step.size() > 3)
-            stepRes = m_pDeck->MakeStep(currentPlayerColor, step.substr(0, 2), step.substr(2));
+        StepResult stepRes = m_pDeck->MakeStep(currentPlayerColor, stepStr.substr(0, 2), stepStr.substr(2));
+        if (stepRes.nError)
+        {
+            m_uiHelper.ClearScreen();
+            std::string errorStr = m_uiHelper.GetErrorValueString(stepRes.nError);
+            if (!errorStr.empty())
+                std::cout << errorStr << "!" << std::endl;
+            continue;
+        }
 
         if (stepRes.gameState != Continue)
         {
             break;
         }
-        m_uiHelper.ClearScreen();
+
         currentPlayerColor = currentPlayerColor == CHESS_COLOR_WHITE ? CHESS_COLOR_BLACK : CHESS_COLOR_WHITE;
+
+        m_uiHelper.ClearScreen();
     }
 }

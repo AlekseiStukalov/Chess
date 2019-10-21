@@ -7,6 +7,63 @@ ConsoleUIHelper::ConsoleUIHelper()
     Liters = "ABCDEFGH";
 }
 
+std::string ConsoleUIHelper::GetErrorValueString(MakeStepError nError)
+{
+    switch (nError)
+    {
+    case E_WRONG_START_CELL:
+        return "Wrong start cell";
+    case E_WRONG_END_CELL:
+        return "Wrong end cell";
+    case E_CAN_NOT_FIND_CELL:
+        return "Can't find cell";
+    case E_START_EQUAL_END:
+        return "Start cell and End cell are equal";
+    case E_START_CELL_HAVE_NO_CHESSMAN:
+        return "Start cell have no chessman";
+    case E_CAN_NOT_MOVE_OPPOSITE_CHESSMAN:
+        return "Can't move opposite player's chessman";
+    case E_CAN_NOT_MOVE_TO_CELL:
+        return "Figure can't move to end cell";
+    case E_NO_PAWN_EN_PASSAN:
+        return "En passan error";
+    case E_NO_ROOK_CASTLING:
+        return "Castling error";
+    default:
+        return "";
+    }
+}
+
+std::string ConsoleUIHelper::GetFigureName(ChessmanValue figureValue, int figureColor)
+{
+    std::string res = (figureColor == CHESS_COLOR_WHITE ? "w" : "b");
+
+    switch (figureValue)
+    {
+    case FigurePawn:
+        res.append("P");
+        break;
+    case FigureBishop:
+        res.append("B");
+        break;
+    case FigureKnight:
+        res.append("N");
+        break;
+    case FigureRook:
+        res.append("R");
+        break;
+    case FigureQueen:
+        res.append("Q");
+        break;
+    case FigureKing:
+        res.append("K");
+        break;
+    default:
+        break;
+    }
+    return res;
+}
+
 std::string ConsoleUIHelper::ReadLine()
 {
     std::string line;
@@ -156,36 +213,6 @@ void ConsoleUIHelper::PrintChessmanCell(ChessmanValue figureValue, int figureCol
         chessmanName.push_back(cFiller);
 
     std::cout << cFiller << chessmanName << "|";
-}
-
-std::string ConsoleUIHelper::GetFigureName(ChessmanValue figureValue, int figureColor)
-{
-    std::string res = (figureColor == CHESS_COLOR_WHITE ? "w" : "b");
-
-    switch (figureValue)
-    {
-        case FigurePawn:
-            res.append("P");
-            break;
-        case FigureBishop:
-            res.append("B");
-            break;
-        case FigureKnight:
-            res.append("N");
-            break;
-        case FigureRook:
-            res.append("R");
-            break;
-        case FigureQueen:
-            res.append("Q");
-            break;
-        case FigureKing:
-            res.append("K");
-            break;
-        default:
-            break;
-    }
-    return res;
 }
 
 char ConsoleUIHelper::GetLiterByNumber(int number)
