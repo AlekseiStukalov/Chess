@@ -3,6 +3,20 @@
 
 #include "Includes.h"
 
+enum MakeStepError
+{
+    E_NO_ERROR,
+    E_WRONG_START_CELL,
+    E_WRONG_END_CELL,
+    E_CAN_NOT_FIND_CELL,
+    E_START_EQUAL_END,
+    E_START_CELL_HAVE_NO_CHESSMAN,
+    E_CAN_NOT_MOVE_OPPOSITE_CHESSMAN,
+    E_CAN_NOT_MOVE_TO_CELL,
+    E_NO_PAWN_EN_PASSAN,
+    E_NOR_ROOK_CASTLING
+};
+
 enum ChessColor
 {
     CHESS_COLOR_BLACK = 1,
@@ -31,29 +45,31 @@ struct StepResult
 {
     StepResult()
     {
-        bSuccess = false;
+        nError = E_NO_ERROR;
         gameState = GameState::Continue;
     }
 
     GameState gameState;
+    MakeStepError nError;
 
-    bool bSuccess;
     int nNextPlayerColor;
 };
 
 struct CellPos
 {
-    CellPos() : number(0), literNumber(0) {}
+    CellPos() : Number(0), LiterNumber(0) {}
+    CellPos(int number, int literNumber) : Number(number), LiterNumber(literNumber) {}
+
     bool operator==(CellPos &obj)
     {
         return (
-            this->number == obj.number
-            && this->literNumber == obj.literNumber
+            this->Number == obj.Number
+            && this->LiterNumber == obj.LiterNumber
             );
     }
 
-    int number;
-    int literNumber;
+    int Number;
+    int LiterNumber;
 };
 
 enum ThreatToKing

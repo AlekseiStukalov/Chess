@@ -5,6 +5,9 @@
 #include "../Common/APIClasses.h"
 #include "DeckCell.h"
 
+#define CASTLING_SIGN '0'
+#define EN_PASSAN_SIGN '!'
+#define EN_PASSAN_SIGN_STR "!"
 
 class Deck : public IDeck
 {
@@ -27,7 +30,7 @@ protected:
     stringVector GetPossibleStrightSteps(CellPos &cellPos, Chessman *pChessman);
     stringVector GetPossibleDiagonalSteps(CellPos &cellPos, Chessman *pChessman);
     stringVector GetPossibleKnightSteps(CellPos &cellPos, Chessman *pChessman);
-    stringVector GetPossibleCastlingSteps(CellPos &cellPos, Chessman *pChessman);
+    stringVector GetPossibleCastlingSteps(CellPos &cellPos, Chessman *pKing);
     stringVector GetPossiblePawnSteps(CellPos &cellPos, Chessman *pChessman);
     stringVector GetPossibleKingSteps(CellPos &cellPos, Chessman *pChessman);
     bool IsPawnEnPassanPossible(ChessColor currentPawnColor, IDeckCell *pNeighborCell);
@@ -46,11 +49,8 @@ protected:
     bool IsCellOnFire(stringVector &rivalSteps, std::string &cellName, ChessColor playerColor);
     bool IsCellOnFire(stringVector &rivalSteps, int number, int literNumber, ChessColor playerColor);
 
-    Chessman* RemoveFigure(std::string &cellName);
-    Chessman* RemoveFigure(int number, int literNumber);
-
-    bool MoveFigure(std::string &oldCellName, std::string &newCellName);
-    bool MoveFigure(int oldNumber, int oldLiterNumber, int newNumber, int newLiterNumber);
+    Chessman* RemoveFigure(CellPos &cellPos);
+    bool MoveFigure(CellPos &oldCellPos, CellPos &newCellPos);
 
     bool CanFigureStepToCell(DeckCell *pCell, ChessColor figureColor);
 
