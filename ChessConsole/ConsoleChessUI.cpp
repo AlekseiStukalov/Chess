@@ -39,40 +39,20 @@ void ConsoleChessUI::Start()
 
     while (true)
     {
-        std::vector<IChessman *> killedWhite = m_pDeck->GetKilledChessmen(CHESS_COLOR_WHITE);
-        std::vector<IChessman *> killedBlack = m_pDeck->GetKilledChessmen(CHESS_COLOR_BLACK);
+        ShowStats();
+        ShowTurn(currentPlayerColor);
 
-        std::cout << "White kills : ";
-        for (int i = 0; i < killedBlack.size(); i++)
-            std::cout << m_uiHelper.GetFigureName(killedBlack[i]->GetChessmanValue(), CHESS_COLOR_BLACK) << " ";
-
-        std::cout << std::endl << "Black kills : ";
-        for (int i = 0; i < killedWhite.size(); i++)
-            std::cout << m_uiHelper.GetFigureName(killedWhite[i]->GetChessmanValue(), CHESS_COLOR_WHITE) << " ";
-        std::cout << std::endl;
-
-
-        if (currentPlayerColor == CHESS_COLOR_WHITE)
-            std::cout << "White [" << WHITE_CHAR_CENTER << "] ";
-        else
-            std::cout << "Black [ ] ";
-
-        std::cout << "player turn:" << std::endl;
         m_uiHelper.PrintDeck(m_pDeck, currentPlayerColor);
 
-        std::cout << "Enter your step (q! to exit): ";
-        std::string stepStr = m_uiHelper.ReadLine();
-
-        if(stepStr.compare("q!") == 0)
+        std::string stepStr;
+        if(!GetStep(stepStr))
             break;
 
         StepResult stepRes = m_pDeck->MakeStep(currentPlayerColor, stepStr.substr(0, 2), stepStr.substr(2));
         if (stepRes.nError)
         {
             m_uiHelper.ClearScreen();
-            std::string errorStr = m_uiHelper.GetErrorValueString(stepRes.nError);
-            if (!errorStr.empty())
-                std::cout << errorStr << "!" << std::endl;
+            ShowError(stepRes.nError);
             continue;
         }
 
@@ -85,4 +65,47 @@ void ConsoleChessUI::Start()
 
         m_uiHelper.ClearScreen();
     }
+}
+
+void ConsoleChessUI::ShowStats()
+{
+    std::vector<IChessman *> killedWhite = m_pDeck->GetKilledChessmen(CHESS_COLOR_WHITE);
+    std::vector<IChessman *> killedBlack = m_pDeck->GetKilledChessmen(CHESS_COLOR_BLACK);
+
+    std::cout << "White kills : ";
+    for (int i = 0; i < killedBlack.size(); i++)
+        std::cout << m_uiHelper.GetFigureName(killedBlack[i]->GetChessmanValue(), CHESS_COLOR_BLACK) << " ";
+
+    std::cout << std::endl << "Black kills : ";
+    for (int i = 0; i < killedWhite.size(); i++)
+        std::cout << m_uiHelper.GetFigureName(killedWhite[i]->GetChessmanValue(), CHESS_COLOR_WHITE) << " ";
+    std::cout << std::endl;
+}
+
+void ConsoleChessUI::ShowTurn(ChessColor currentPlayerColor)
+{
+    if (currentPlayerColor == CHESS_COLOR_WHITE)
+        std::cout << "White [" << WHITE_CHAR_CENTER << "] ";
+    else
+        std::cout << "Black [ ] ";
+
+    std::cout << "player turn:" << std::endl;
+}
+
+bool ConsoleChessUI::GetStep(std::string &stepStr)
+{
+    std::cout << "Enter your step (q! to exit): ";
+    stepStr = m_uiHelper.ReadLine();
+
+    if (stepStr.compare("q!") == 0)
+        false;
+
+    return true;
+}
+
+void ConsoleChessUI::ShowError(MakeStepError nError)
+{
+    std::string errorStr = m_uiHelper.GetErrorValueString(nError);
+    if (!errorStr.empty())
+        std::cout << errorStr << "!" << std::endl;
 }

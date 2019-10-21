@@ -11,6 +11,10 @@ public:
     ~ConsoleChessUI();
 
     void Start();
+    void ShowStats();
+    void ShowTurn(ChessColor currentPlayerColor);
+    bool GetStep(std::string &stepStr);
+    void ShowError(MakeStepError nError);
 
 private:
 
