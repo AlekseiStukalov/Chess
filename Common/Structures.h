@@ -129,7 +129,7 @@ public:
 
 struct ChessmanPossibleSteps
 {
-    CellPos cessmanPos;
+    CellPos chessmanPos;
     ChessmanValue chessmanValue;
     StepsPossibility steps;
 };
@@ -138,46 +138,43 @@ struct ChessmanPossibleSteps
 class AllSteps
 {
 public:
-    std::vector<CellPos> GetChessmenWhoCanStepOrKill(CellPos &targetPos)
+    std::vector<CellPos> GetChessmenWhoCanAttackCell(CellPos &targetPos)
+    {
+        std::vector<CellPos> cells;
+
+        for (auto &chessmanSteps : m_AllSteps)
+        {
+            if (chessmanSteps.steps.IsPosExists(chessmanSteps.steps.CanKill, targetPos))
+                cells.push_back(chessmanSteps.chessmanPos);
+        }
+
+        return cells;
+    }
+
+    std::vector<CellPos> GetChessmenWhoCanStepToCell(CellPos &targetPos)
     {
         std::vector<CellPos> cells;
 
         for (auto &chessmanSteps : m_AllSteps)
         {
             if (chessmanSteps.steps.IsPosExists(chessmanSteps.steps.CanStep, targetPos))
-                cells.push_back(chessmanSteps.cessmanPos);
-        }
-
-        for (auto &chessmanSteps : m_AllSteps)
-        {
-            if (chessmanSteps.steps.IsPosExists(chessmanSteps.steps.CanKill, targetPos))
-                cells.push_back(chessmanSteps.cessmanPos);
+                cells.push_back(chessmanSteps.chessmanPos);
         }
 
         return cells;
     }
 
-
-    bool IsContainForStep(CellPos &pos)
+    std::vector<CellPos> GetChessmenWhoCanProtectCell(CellPos &targetPos)
     {
+        std::vector<CellPos> cells;
+
         for (auto &chessmanSteps : m_AllSteps)
         {
-            if (chessmanSteps.steps.IsPosExists(chessmanSteps.steps.CanStep, pos))
-                return true;
+            if (chessmanSteps.steps.IsPosExists(chessmanSteps.steps.CanProtect, targetPos))
+                cells.push_back(chessmanSteps.chessmanPos);
         }
 
-        return false;
-    }
-
-    bool IsContainForKill(CellPos &pos)
-    {
-        for (auto &chessmanSteps : m_AllSteps)
-        {
-            if (chessmanSteps.steps.IsPosExists(chessmanSteps.steps.CanKill, pos))
-                return true;
-        }
-
-        return false;
+        return cells;
     }
 
     void AddChessmanSteps(ChessmanPossibleSteps &steps)

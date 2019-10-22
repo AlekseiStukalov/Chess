@@ -366,7 +366,7 @@ AllSteps Deck::GetAllPossibleSteps(ChessColor nPlayerColor)
             {
                 ChessmanPossibleSteps steps;
                 steps.chessmanValue = pChessman->GetChessmanValue();
-                steps.cessmanPos = pChessman->GetCurrentCell()->GetCellPos();
+                steps.chessmanPos = pChessman->GetCurrentCell()->GetCellPos();
                 steps.steps = GetPossibleSteps(pChessman);
 
                 allSteps.AddChessmanSteps(steps);
@@ -723,55 +723,21 @@ bool Deck::IsPawnEnPassanPossible(ChessColor currentPawnColor, IDeckCell *pNeigh
     return false;
 }
 
-
-
-
-
-bool Deck::IsCellOnFire(AllSteps &rivalSteps, DeckCell *pCell, ChessColor playerColor)
-{
-    if (pCell)
-        return IsCellOnFire(rivalSteps, pCell->GetCellName(), playerColor);
-    return false;
-}
-
-bool Deck::IsCellOnFire(AllSteps &rivalSteps, std::string &cellName, ChessColor playerColor)
-{
-    if (cellName.size() < 2)
-        return false;
-
-    //if (rivalSteps.find_no_case(cellName) != std::string::npos)
-    //    return true;
-
-    //?
-
-    return false;
-}
-
-bool Deck::IsCellOnFire(AllSteps &rivalSteps, int number, int literNumber, ChessColor playerColor)
-{
-    std::string cellName = EngineHelper::Instance().GetCellName(number, literNumber);
-
-    return IsCellOnFire(rivalSteps, cellName, playerColor);
-}
-
-
-
-
 ThreatToKing Deck::GetThreatToKing(AllSteps &rivalSteps, AllSteps &friendSteps, ChessColor playerColor)
 {
     ThreatToKing threat = ThreatToKing::None;
     IDeckCell *pKingCell = nullptr;
     Chessman *pKingChessman = nullptr;
 
-    std::vector<CellPos> cells = FindFigureOnDeck(FigureKing, playerColor);
+    std::vector<CellPos> kingCells = FindFigureOnDeck(FigureKing, playerColor);
 
-    if (cells.size() == 0)
+    if (kingCells.size() == 0)
         return threat;
 
-    pKingCell = GetCell(cells[0]);
+    pKingCell = GetCell(kingCells[0]);
     pKingChessman = (Chessman *)pKingCell->GetChessman();
 
-    CellPos kingPos = cells[0];
+    CellPos kingPos = kingCells[0];
     StepsPossibility kingSteps = GetPossibleKingSteps(kingPos, pKingChessman);
 
     std::vector<CellPos> freeCells;
@@ -780,14 +746,15 @@ ThreatToKing Deck::GetThreatToKing(AllSteps &rivalSteps, AllSteps &friendSteps, 
     {
         bool bCellUnderAttack = false;
 
-        if (rivalSteps.IsContainForKill(kingSteps.CanStep[i]))
+        if (!rivalSteps.GetChessmenWhoCanStepToCell(kingSteps.CanStep[i]).empty())
             bCellUnderAttack = true;
 
         if (!bCellUnderAttack)
             freeCells.push_back(kingSteps.CanStep[i]);
     }
 
-    bool bKingUnderAttack = rivalSteps.IsContainForKill(kingPos);
+    std::vector<CellPos> killerCells = rivalSteps.GetChessmenWhoCanAttackCell(kingPos);
+    bool bKingUnderAttack = !killerCells.empty();
     if (bKingUnderAttack)
     {
         if (freeCells.size() == 0)
@@ -826,35 +793,42 @@ ThreatToKing Deck::GetThreatToKing(AllSteps &rivalSteps, AllSteps &friendSteps, 
     //check: if anyone can protect -> threat = Check
     else if (threat == ThreatToKing::CheckMate)
     {
-        std::vector<CellPos> cells = rivalSteps.GetChessmenWhoCanStepOrKill(kingPos);
-
-        if (cells.size() == 1)
+        if (killerCells.size() == 1)
         {
-            Chessman *pKiller = (Chessman *)GetCell(cells[0])->GetChessman();
+            Chessman *pKiller = (Chessman *)GetCell(killerCells[0])->GetChessman();
 
-            //Find who cal kill the killer
-            if (friendSteps.IsContainForKill(cells[0]))
+            //Find who can kill the killer
+            std::vector<CellPos> defendersCells = friendSteps.GetChessmenWhoCanAttackCell(killerCells[0]);
+            if (!defendersCells.empty())
             {
-                //if the killer can be killed by the King only, check if the killer is not protected by smb
+                if (defendersCells.size() == 1 && defendersCells[0] == kingPos)
+                {
+                    //if the killer can be killed by the King only, check the killer is not protected by smb
+                    if (rivalSteps.GetChessmenWhoCanProtectCell(killerCells[0]).empty())
+                        threat = ThreatToKing::Check;
+                }
+                else
+                    threat = ThreatToKing::Check;
             }
             else
             {
-                //Find who can stop the killer
-
-                cells = GetConnectingCells(pKiller, pKingChessman);
-
-
-                for (size_t i = 0; i < cells.size(); i++)
+                //Find who can sacrifice itself to save king
+                std::vector<CellPos> cellsOnTheWayToKing = GetConnectingCells(pKiller, pKingChessman);
+                for (size_t i = 0; i < cellsOnTheWayToKing.size(); i++)
                 {
-                    if (friendSteps.IsContainForStep(cells[i]))
+                    std::vector<CellPos> sacrificeCells;
+                    
+                    sacrificeCells = friendSteps.GetChessmenWhoCanStepToCell(cellsOnTheWayToKing[i]);
+                    if (!sacrificeCells.empty())
                     {
-                        //except fot the king
+                        if (sacrificeCells.size() == 1 && sacrificeCells[0] == kingPos)
+                            continue;
+
+                        threat = ThreatToKing::Check;
+                        break;
                     }
                 }
             }
-
-            //2) find all cells between king and killer
-            //3) find if any of these cells exist in friendly steps (except king steps of course) and kills (include king)
         }
     }
 
@@ -907,6 +881,11 @@ std::vector<CellPos> Deck::FindFigureOnDeck(ChessmanValue chessman, ChessColor p
 std::vector<CellPos> Deck::GetConnectingCells(Chessman *pExecutor, Chessman *pGoal)
 {
     std::vector<CellPos> cells;
+
+
+
+
+
 
 
     return cells;

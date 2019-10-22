@@ -32,10 +32,6 @@ protected:
     StepsPossibility GetPossibleKingSteps(CellPos &cellPos, Chessman *pChessman);
     bool IsPawnEnPassanPossible(ChessColor currentPawnColor, IDeckCell *pNeighborCell);
 
-    bool IsCellOnFire(AllSteps &rivalSteps, DeckCell *pCell, ChessColor playerColor);
-    bool IsCellOnFire(AllSteps &rivalSteps, std::string &cellName, ChessColor playerColor);
-    bool IsCellOnFire(AllSteps &rivalSteps, int number, int literNumber, ChessColor playerColor);
-
     ThreatToKing GetThreatToKing(AllSteps &rivalSteps, AllSteps &friendSteps, ChessColor playerColor);
     void GetGameState(StepResult &result);
 
