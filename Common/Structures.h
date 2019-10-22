@@ -129,6 +129,7 @@ public:
 
 struct ChessmanPossibleSteps
 {
+    CellPos cessmanPos;
     ChessmanValue chessmanValue;
     StepsPossibility steps;
 };
@@ -137,6 +138,26 @@ struct ChessmanPossibleSteps
 class AllSteps
 {
 public:
+    std::vector<CellPos> GetChessmenWhoCanStepOrKill(CellPos &targetPos)
+    {
+        std::vector<CellPos> cells;
+
+        for (auto &chessmanSteps : m_AllSteps)
+        {
+            if (chessmanSteps.steps.IsPosExists(chessmanSteps.steps.CanStep, targetPos))
+                cells.push_back(chessmanSteps.cessmanPos);
+        }
+
+        for (auto &chessmanSteps : m_AllSteps)
+        {
+            if (chessmanSteps.steps.IsPosExists(chessmanSteps.steps.CanKill, targetPos))
+                cells.push_back(chessmanSteps.cessmanPos);
+        }
+
+        return cells;
+    }
+
+
     bool IsContainForStep(CellPos &pos)
     {
         for (auto &chessmanSteps : m_AllSteps)

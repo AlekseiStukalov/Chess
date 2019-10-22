@@ -366,6 +366,7 @@ AllSteps Deck::GetAllPossibleSteps(ChessColor nPlayerColor)
             {
                 ChessmanPossibleSteps steps;
                 steps.chessmanValue = pChessman->GetChessmanValue();
+                steps.cessmanPos = pChessman->GetCurrentCell()->GetCellPos();
                 steps.steps = GetPossibleSteps(pChessman);
 
                 allSteps.AddChessmanSteps(steps);
@@ -825,10 +826,36 @@ ThreatToKing Deck::GetThreatToKing(AllSteps &rivalSteps, AllSteps &friendSteps, 
     //check: if anyone can protect -> threat = Check
     else if (threat == ThreatToKing::CheckMate)
     {
-        //1) find who can kill king    (what if there are two killers?)
-        //      If there are two possible killers ->
-        //2) find all cells between king and killer
-        //3) find if any of these cells exist in friendly steps (except king steps of course) and kills (include king)
+        std::vector<CellPos> cells = rivalSteps.GetChessmenWhoCanStepOrKill(kingPos);
+
+        if (cells.size() == 1)
+        {
+            Chessman *pKiller = (Chessman *)GetCell(cells[0])->GetChessman();
+
+            //Find who cal kill the killer
+            if (friendSteps.IsContainForKill(cells[0]))
+            {
+                //if the killer can be killed by the King only, check if the killer is not protected by smb
+            }
+            else
+            {
+                //Find who can stop the killer
+
+                cells = GetConnectingCells(pKiller, pKingChessman);
+
+
+                for (size_t i = 0; i < cells.size(); i++)
+                {
+                    if (friendSteps.IsContainForStep(cells[i]))
+                    {
+                        //except fot the king
+                    }
+                }
+            }
+
+            //2) find all cells between king and killer
+            //3) find if any of these cells exist in friendly steps (except king steps of course) and kills (include king)
+        }
     }
 
     return threat;
@@ -873,6 +900,14 @@ std::vector<CellPos> Deck::FindFigureOnDeck(ChessmanValue chessman, ChessColor p
             }
         }
     }
+
+    return cells;
+}
+
+std::vector<CellPos> Deck::GetConnectingCells(Chessman *pExecutor, Chessman *pGoal)
+{
+    std::vector<CellPos> cells;
+
 
     return cells;
 }

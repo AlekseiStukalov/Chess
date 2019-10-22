@@ -40,6 +40,7 @@ protected:
     void GetGameState(StepResult &result);
 
     std::vector<CellPos> FindFigureOnDeck(ChessmanValue chessman, ChessColor playerColor);
+    std::vector<CellPos> GetConnectingCells(Chessman *pExecutor, Chessman *pGoal);
 
     void CreateDeck();
     void FillChessmenInitState();

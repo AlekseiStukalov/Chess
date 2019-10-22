@@ -18,7 +18,7 @@ public:
     std::string GetCellName(int number, int literNumber);
     CellPos GetCellPos(std::string &cellName);
 
-    bool EngineHelper::GetChessmanValueByName(ChessmanValue &value, std::string &name);
+    bool GetChessmanValueByName(ChessmanValue &value, std::string &name);
 
     std::vector<std::pair<int, int>> GetKingOffsets();
 
