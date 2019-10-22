@@ -188,4 +188,16 @@ private:
 };
 
 
+class StepStoryRecord
+{
+public:
+    StepStoryRecord() {};
+    ~StepStoryRecord() {};
+
+private:
+    size_t m_nStepNumber;
+    std::string m_sStepName;   //https://en.wikipedia.org/wiki/Chess_notation
+    StepResult m_StepResult;
+};
+
 
