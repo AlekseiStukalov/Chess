@@ -22,8 +22,11 @@ public:
     void SetChessmanColor(ChessColor nColor);
     void SetChessmanValue(ChessmanValue nValue);
     void SetKilled();
-    int GetChessmanStepNumber();
+    size_t GetChessmanStepNumber();
     void IncChessmanStepNumber();
+
+    size_t GetChessmanlastUsedStepNumber();
+    void SetChessmanLastUsed(size_t lastUsed);
 
 protected:
 
@@ -33,5 +36,6 @@ protected:
     ChessmanValue m_nChessmanValue;
 
     bool m_bKilled;
-    int m_nChessmanStepNumber;
+    size_t m_nChessmanStepNumber;
+    size_t m_nLastUsedStepNumber;
 };

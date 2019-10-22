@@ -61,7 +61,7 @@ void Chessman::SetKilled()
     m_bKilled = true;
 }
 
-int Chessman::GetChessmanStepNumber()
+size_t Chessman::GetChessmanStepNumber()
 {
     return m_nChessmanStepNumber;
 }
@@ -69,4 +69,14 @@ int Chessman::GetChessmanStepNumber()
 void Chessman::IncChessmanStepNumber()
 {
     m_nChessmanStepNumber++;
+}
+
+size_t Chessman::GetChessmanlastUsedStepNumber()
+{
+    return m_nLastUsedStepNumber;
+}
+
+void Chessman::SetChessmanLastUsed(size_t lastUsed)
+{
+    m_nLastUsedStepNumber = lastUsed;
 }

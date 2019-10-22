@@ -5,10 +5,6 @@
 #include "../Common/APIClasses.h"
 #include "DeckCell.h"
 
-#define CASTLING_SIGN '0'
-#define EN_PASSAN_SIGN '!'
-#define EN_PASSAN_SIGN_STR "!"
-
 class Deck : public IDeck
 {
 public:
@@ -16,7 +12,7 @@ public:
     ~Deck();
 
     virtual StepResult MakeStep(ChessColor playerColor, std::string &sOldPos, std::string &sNewPos);
-    virtual stringVector GetPossibleSteps(std::string &cellName);///All possible steps with cells, where this figure will be under attack
+    virtual StepsPossibility GetPossibleSteps(std::string &cellName);///All possible steps with cells, where this figure will be under attack
     virtual IDeckCell* GetCell(std::string &cellName);
     virtual IDeckCell* GetCell(CellPos &cellPos);
     virtual IDeckCell* GetCell(int number, int literNumber);
@@ -25,25 +21,25 @@ public:
     virtual StepResult PawnRespawn(ChessColor playerColor, std::string &sPos, std::string &sChessmanName);
 
 protected:
-    StepResult DoMakeStep(ChessColor playerColor, std::string &sOldPos, std::string &sNewPos);
-    stringVector GetPossibleSteps(Chessman *pChessman);
-    stringVector GetAllPossibleSteps(ChessColor nPlayerColor);
-    stringVector GetPossibleStrightSteps(CellPos &cellPos, Chessman *pChessman);
-    stringVector GetPossibleDiagonalSteps(CellPos &cellPos, Chessman *pChessman);
-    stringVector GetPossibleKnightSteps(CellPos &cellPos, Chessman *pChessman);
-    stringVector GetPossibleCastlingSteps(CellPos &cellPos, Chessman *pKing);
-    stringVector GetPossiblePawnSteps(CellPos &cellPos, Chessman *pChessman);
-    stringVector GetPossibleKingSteps(CellPos &cellPos, Chessman *pChessman);
+    StepResult DoMakeStep(DeckCell *pOldCell, DeckCell *pNewCell, std::vector<CellPos> &additionalCells);
+    StepsPossibility GetPossibleSteps(Chessman *pChessman);
+    AllSteps GetAllPossibleSteps(ChessColor nPlayerColor);
+    StepsPossibility GetPossibleStrightSteps(CellPos &cellPos, Chessman *pChessman);
+    StepsPossibility GetPossibleDiagonalSteps(CellPos &cellPos, Chessman *pChessman);
+    StepsPossibility GetPossibleKnightSteps(CellPos &cellPos, Chessman *pChessman);
+    StepsPossibility GetPossibleCastlingSteps(CellPos &cellPos, Chessman *pKing);
+    StepsPossibility GetPossiblePawnSteps(CellPos &cellPos, Chessman *pChessman);
+    StepsPossibility GetPossibleKingSteps(CellPos &cellPos, Chessman *pChessman);
     bool IsPawnEnPassanPossible(ChessColor currentPawnColor, IDeckCell *pNeighborCell);
 
-    bool IsCellOnFire(stringVector &rivalSteps, DeckCell *pCell, ChessColor playerColor);
-    bool IsCellOnFire(stringVector &rivalSteps, std::string &cellName, ChessColor playerColor);
-    bool IsCellOnFire(stringVector &rivalSteps, int number, int literNumber, ChessColor playerColor);
+    bool IsCellOnFire(AllSteps &rivalSteps, DeckCell *pCell, ChessColor playerColor);
+    bool IsCellOnFire(AllSteps &rivalSteps, std::string &cellName, ChessColor playerColor);
+    bool IsCellOnFire(AllSteps &rivalSteps, int number, int literNumber, ChessColor playerColor);
 
-    ThreatToKing GetThreatToKing(stringVector &rivalSteps, ChessColor playerColor);
-    GameState GetGameState();
+    ThreatToKing GetThreatToKing(AllSteps &rivalSteps, AllSteps &friendSteps, ChessColor playerColor);
+    void GetGameState(StepResult &result);
 
-    stringVector FindFigureOnDeck(ChessmanValue chessman, ChessColor playerColor);
+    std::vector<CellPos> FindFigureOnDeck(ChessmanValue chessman, ChessColor playerColor);
 
     void CreateDeck();
     void FillChessmenInitState();
@@ -51,9 +47,8 @@ protected:
     bool SetFigure(Chessman *pChessman, int number, char liter);
 
     Chessman* RemoveFigure(CellPos &cellPos);
-    bool MoveFigure(CellPos &oldCellPos, CellPos &newCellPos);
-
-    bool CanFigureStepToCell(DeckCell *pCell, ChessColor figureColor);
+    bool MoveFigure(DeckCell *pOldCell, DeckCell *pNewCell);
+    bool AddChessmanActionForCell(DeckCell *pCell, ChessColor figureColor, StepsPossibility &steps);
 
     size_t GetStepNumber();
     void IncStepNumber();
