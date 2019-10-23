@@ -45,6 +45,9 @@
     <ClCompile Include="..\Common\StringList.cpp">
       <Filter>Common\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="StepStoryManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChessEngineLib.h">
@@ -85,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="..\Common\APIClasses.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="StepStoryManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
