@@ -2,6 +2,7 @@
 #include "../Common/Structures.h"
 #include "EngineHelper.h"
 #include "Deck.h"
+#include <cstdlib> 
 
 
 IDeck* ChessEngine::CreateDeck()
@@ -524,7 +525,7 @@ StepsPossibility Deck::GetPossibleCastlingSteps(CellPos &cellPos, Chessman *pKin
             pRook2 = (Chessman *)GetCell(cells[1])->GetChessman();
     }
 
-    if (pKing && pKing->GetChessmanStepNumber() == 0)
+    if (pKing->GetChessmanStepNumber() == 0)
     {
         bool bCastlingA = false;
         bool bCastlingH = false;
@@ -882,11 +883,70 @@ std::vector<CellPos> Deck::GetConnectingCells(Chessman *pExecutor, Chessman *pGo
 {
     std::vector<CellPos> cells;
 
+    ChessmanValue executorValue = pExecutor->GetChessmanValue();
+    CellPos executorPos = pExecutor->GetCurrentCell()->GetCellPos();
+    CellPos goalPos = pGoal->GetCurrentCell()->GetCellPos();
 
+    if (executorValue == ChessmanValue::FigureQueen ||
+        executorValue == ChessmanValue::FigureRook)
+    {
+        if (executorPos.Number == goalPos.Number)
+        {
+            CellPos midCell;
+            midCell.Number = goalPos.Number;
 
+            int offset = (goalPos.LiterNumber > executorPos.LiterNumber ? 1 : -1);
 
+            int i = executorPos.LiterNumber + offset;
+            while (i != goalPos.LiterNumber)
+            {
+                midCell.LiterNumber = i;
+                i += offset;
+                cells.push_back(midCell);
+            }
+        }
+        else if (executorPos.LiterNumber == goalPos.LiterNumber)
+        {
+            CellPos midCell;
+            midCell.LiterNumber = goalPos.LiterNumber;
 
+            int offset = (executorPos.Number > goalPos.Number ? 1 : -1);
 
+            int i = goalPos.Number + offset;
+            while (i != executorPos.Number)
+            {
+                midCell.Number = i;
+                i += offset;
+                cells.push_back(midCell);
+            }
+        }
+    }
+
+    if (executorValue == ChessmanValue::FigureBishop ||
+        executorValue == ChessmanValue::FigureQueen)
+    {
+        int xDiff = abs(executorPos.LiterNumber - goalPos.LiterNumber);  //liters
+        int yDiff = abs(executorPos.Number - goalPos.Number);
+        if (xDiff == yDiff && xDiff > 1)
+        {
+            int xOffset = (goalPos.LiterNumber > executorPos.LiterNumber ? 1 : -1); //liters
+            int yOffset = (goalPos.Number > executorPos.Number ? 1 : -1);
+
+            CellPos midCell;
+
+            int x = executorPos.LiterNumber + xOffset;
+            int y = executorPos.Number + yOffset;
+            while (x != goalPos.LiterNumber || y != goalPos.Number)
+            {
+                midCell.LiterNumber = x;
+                midCell.Number = y;
+
+                x += xOffset;
+                y += yOffset;
+                cells.push_back(midCell);
+            }
+        }
+    }
 
     return cells;
 }
