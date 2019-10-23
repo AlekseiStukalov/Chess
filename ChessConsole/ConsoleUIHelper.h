@@ -16,7 +16,7 @@ public:
     std::string GetFigureName(ChessmanValue figureValue, int figureColor);
     std::string ReadLine();
     void ClearScreen();
-    void PrintDeck(IDeck *pDeck, int nTargetPlayerColor);
+    void PrintDeck(IDeckEngine *pDeck, int nTargetPlayerColor);
 private:
     void PrintEmptyCell(int cellColor);
     void PrintBottomTreshold();

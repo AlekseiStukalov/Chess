@@ -19,6 +19,7 @@ public:
     CellPos GetCellPos(std::string &cellName);
 
     bool GetChessmanValueByName(ChessmanValue &value, std::string &name);
+    char GetChessmanNameByValue(ChessmanValue &value);
 
     std::vector<std::pair<int, int>> GetKingOffsets();
 

@@ -120,7 +120,7 @@ void ConsoleUIHelper::ClearScreen()
     SetConsoleCursorPosition(hStdOut, homeCoords);
 }
 
-void ConsoleUIHelper::PrintDeck(IDeck *pDeck, int nTargetPlayerColor)
+void ConsoleUIHelper::PrintDeck(IDeckEngine *pDeck, int nTargetPlayerColor)
 {
     PrintTheTopTreshold();
 

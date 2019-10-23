@@ -59,6 +59,9 @@ struct StepResult
     {
         nError = E_NO_ERROR;
         gameState = GameState::Continue;
+        bSpecialStep = false;
+        threatToWhiteKing = None;
+        threatToBlackKing = None;
     }
 
     ThreatToKing threatToWhiteKing;
@@ -69,6 +72,8 @@ struct StepResult
     MakeStepError nError;
 
     ChessColor nNextPlayerColor;
+
+    bool bSpecialStep;
 };
 
 struct CellPos
@@ -76,7 +81,7 @@ struct CellPos
     CellPos() : Number(0), LiterNumber(0) {}
     CellPos(int number, int literNumber) : Number(number), LiterNumber(literNumber) {}
 
-    bool operator==(CellPos &obj)
+    bool operator==(const CellPos &obj)
     {
         return (
             this->Number == obj.Number
@@ -194,7 +199,6 @@ public:
     StepStoryRecord() {};
     ~StepStoryRecord() {};
 
-private:
     size_t m_nStepNumber;
     std::string m_sStepName;   //https://en.wikipedia.org/wiki/Chess_notation
     StepResult m_StepResult;

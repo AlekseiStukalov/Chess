@@ -32,7 +32,7 @@ void ConsoleChessUI::MoveConsoleWindow()
 void ConsoleChessUI::Start()
 {
     ChessEngine engine;
-    m_pDeck = engine.CreateDeck();
+    m_pDeckEngine = engine.CreateDeck();
 
     //std::cout << "while player, enter name plz: ";
     //m_WhitePlayer.m_sNickname = m_uiHelper.ReadLine();
@@ -53,7 +53,7 @@ void ConsoleChessUI::Start()
         ShowStats();
         ShowTurn(currentPlayerColor);
 
-        m_uiHelper.PrintDeck(m_pDeck, currentPlayerColor);
+        m_uiHelper.PrintDeck(m_pDeckEngine, currentPlayerColor);
 
         std::string stepStr;
 
@@ -63,7 +63,7 @@ void ConsoleChessUI::Start()
             if (stepStr.compare("q!") == 0)
                 break;
 
-            stepResult = m_pDeck->MakeStep(currentPlayerColor, stepStr.substr(0, 2), stepStr.substr(2));
+            stepResult = m_pDeckEngine->MakeStep(currentPlayerColor, stepStr.substr(0, 2), stepStr.substr(2));
         }
         else
         {
@@ -71,7 +71,7 @@ void ConsoleChessUI::Start()
             if (stepStr.compare("q!") == 0)
                 break;
 
-            stepResult = m_pDeck->PawnRespawn(currentPlayerColor, stepResult.respawnCellName, stepStr);
+            stepResult = m_pDeckEngine->PawnRespawn(currentPlayerColor, stepResult.respawnCellName, stepStr);
         }
 
         if (stepResult.nError)
@@ -95,8 +95,8 @@ void ConsoleChessUI::Start()
 
 void ConsoleChessUI::ShowStats()
 {
-    std::vector<IChessman *> killedWhite = m_pDeck->GetKilledChessmen(CHESS_COLOR_WHITE);
-    std::vector<IChessman *> killedBlack = m_pDeck->GetKilledChessmen(CHESS_COLOR_BLACK);
+    std::vector<IChessman *> killedWhite = m_pDeckEngine->GetKilledChessmen(CHESS_COLOR_WHITE);
+    std::vector<IChessman *> killedBlack = m_pDeckEngine->GetKilledChessmen(CHESS_COLOR_BLACK);
 
     std::cout << "White kills : ";
     for (int i = 0; i < killedBlack.size(); i++)

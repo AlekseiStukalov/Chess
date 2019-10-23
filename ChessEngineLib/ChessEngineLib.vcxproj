@@ -189,6 +189,7 @@
     <ClCompile Include="ChessEngineLib.cpp" />
     <ClCompile Include="Chessman.cpp" />
     <ClCompile Include="Deck.cpp" />
+    <ClCompile Include="DeckEngine.cpp" />
     <ClCompile Include="DeckCell.cpp" />
     <ClCompile Include="EngineHelper.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -197,7 +198,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="StepStoryManager.cpp" />
+    <ClCompile Include="StepsStoryManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\APIClasses.h" />
@@ -208,11 +209,12 @@
     <ClInclude Include="ChessEngineLib.h" />
     <ClInclude Include="Chessman.h" />
     <ClInclude Include="Deck.h" />
+    <ClInclude Include="DeckEngine.h" />
     <ClInclude Include="DeckCell.h" />
     <ClInclude Include="EngineHelper.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="StepStoryManager.h" />
+    <ClInclude Include="StepsStoryManager.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>

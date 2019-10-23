@@ -2,14 +2,14 @@
 #include "../Common/Structures.h"
 #include "../Common/StringList.h"
 
-class IDeck;
+class IDeckEngine;
 class IDeckCell;
 class IChessman;
 
 class CLASS_DECLSPEC ChessEngine
 {
 public:
-    IDeck* CreateDeck();
+    IDeckEngine* CreateDeck();
 };
 
 class IChessman
@@ -30,7 +30,7 @@ public:
     virtual CellPos GetCellPos() = 0;
 };
 
-class IDeck
+class IDeckEngine
 {
 public:
     virtual StepResult MakeStep(ChessColor playerColor, std::string &sOldPos, std::string &sNewPos) = 0;
@@ -41,4 +41,5 @@ public:
     virtual IChessman* GetChessmanFromDeck(int number, int literNumber) = 0;
     virtual std::vector<IChessman*> GetKilledChessmen(ChessColor playerColor) = 0;
     virtual StepResult PawnRespawn(ChessColor playerColor, std::string &sPos, std::string &sChessmanName) = 0;
+    virtual size_t GetStepNumber() = 0;
 };

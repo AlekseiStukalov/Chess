@@ -5,7 +5,7 @@
 #endif
 
 #include "resource.h"
-#include "Deck.h"
+#include "DeckEngine.h"
 
 class CChessEngineLibApp : public CWinApp
 {

@@ -107,6 +107,26 @@ bool EngineHelper::GetChessmanValueByName(ChessmanValue &value, std::string &nam
     return true;
 }
 
+char EngineHelper::GetChessmanNameByValue(ChessmanValue &value)
+{
+    switch (value)
+    {
+    case FigureBishop:
+        return 'B';
+    case FigureKnight:
+        return 'N';
+    case FigureRook:
+        return 'R';
+    case FigureQueen:
+        return 'Q';
+    case FigureKing:
+        return 'K';
+    case FigurePawn:
+    default:
+        return 'P';
+    }
+}
+
 std::vector<std::pair<int, int>> EngineHelper::GetKingOffsets()
 {
     std::vector<std::pair<int, int>> offsets; //number, liter

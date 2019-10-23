@@ -22,7 +22,7 @@ public:
 private:
 
     ConsoleUIHelper m_uiHelper;
-    IDeck *m_pDeck;
+    IDeckEngine *m_pDeckEngine;
     Player m_WhitePlayer;
     Player m_BlackPlayer;
 };

@@ -33,9 +33,6 @@
     <ClCompile Include="Chessman.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Deck.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DeckCell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -45,7 +42,13 @@
     <ClCompile Include="..\Common\StringList.cpp">
       <Filter>Common\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="StepStoryManager.cpp">
+    <ClCompile Include="StepsStoryManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeckEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Deck.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,16 +83,19 @@
     <ClInclude Include="Chessman.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Deck.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DeckCell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\APIClasses.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="StepStoryManager.h">
+    <ClInclude Include="StepsStoryManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeckEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deck.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
