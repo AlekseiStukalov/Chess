@@ -202,9 +202,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ChessMFC.htm">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
     <None Include="res\ChessMFC.rc2" />
   </ItemGroup>
   <ItemGroup>
@@ -212,6 +209,11 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\ChessMFC.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ChessEngineLib\ChessEngineLib.vcxproj">
+      <Project>{f3ec154f-461e-4560-99c9-a388382076a9}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
