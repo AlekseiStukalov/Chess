@@ -25,7 +25,40 @@ void CChessMFCDlg::DoDataExchange(CDataExchange* pDX)
     CDialog::DoDataExchange(pDX);
 }
 
+void CChessMFCDlg::DrawDesk()
+{
+    CImage pngImage;
+    CBitmap pngBmp;
+    CBitmap *pOldbmp;
+
+
+    CDC bmDC;
+    BITMAP  bi;
+    UINT xPos = 384, yPos = 128;
+
+    CClientDC dc(this);
+
+    pngImage.LoadFromResource(AfxGetInstanceHandle(), IDB_CHESSMEN);
+
+    IDB_CHESSMEN;
+
+    CPaintDC dc(this);
+    CPen *pen = new CPen(PS_SOLID, 3, RGB(0, 0, 0));
+    dc.SelectObject(pen);
+    dc.MoveTo(10, 10);
+    dc.LineTo(10, 150);
+
+    CRect rc(0, 0, 150, 150);
+    CBrush br(RGB(0, 0, 0));
+
+    FillRect(dc,rc, br);
+
+    delete pen;
+}
+
 BEGIN_MESSAGE_MAP(CChessMFCDlg, CDialog)
+    ON_WM_PAINT()
+    ON_WM_GETMINMAXINFO()
 END_MESSAGE_MAP()
 
 
@@ -34,6 +67,7 @@ END_MESSAGE_MAP()
 BOOL CChessMFCDlg::OnInitDialog()
 {
     CDialog::OnInitDialog();
+
 
     SetIcon(m_hIcon, TRUE);
     SetIcon(m_hIcon, FALSE);
@@ -62,6 +96,7 @@ void CChessMFCDlg::OnPaint()
     }
     else
     {
+        DrawDesk();
         CDialog::OnPaint();
     }
 }
@@ -71,6 +106,12 @@ void CChessMFCDlg::OnPaint()
 HCURSOR CChessMFCDlg::OnQueryDragIcon()
 {
     return static_cast<HCURSOR>(m_hIcon);
+}
+
+void CChessMFCDlg::OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI)
+{
+    lpMMI->ptMinTrackSize.x = 600;
+    lpMMI->ptMinTrackSize.y = 630;
 }
 
 HRESULT CChessMFCDlg::OnButtonOK(IHTMLElement* /*pElement*/)

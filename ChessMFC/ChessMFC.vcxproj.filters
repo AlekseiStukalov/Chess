@@ -59,5 +59,11 @@
     <Image Include="res\ChessMFC.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\chess-147x147.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\chess-64x64.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

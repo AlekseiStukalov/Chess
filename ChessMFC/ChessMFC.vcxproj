@@ -208,6 +208,8 @@
     <ResourceCompile Include="ChessMFC.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\chess-147x147.png" />
+    <Image Include="res\chess-64x64.png" />
     <Image Include="res\ChessMFC.ico" />
   </ItemGroup>
   <ItemGroup>

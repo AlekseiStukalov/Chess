@@ -13,6 +13,7 @@ public:
 
 protected:
     virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
+    void DrawDesk();
 
     HRESULT OnButtonOK(IHTMLElement *pElement);
     HRESULT OnButtonCancel(IHTMLElement *pElement);
@@ -25,5 +26,7 @@ protected:
     virtual BOOL OnInitDialog();
     afx_msg void OnPaint();
     afx_msg HCURSOR OnQueryDragIcon();
+    afx_msg void OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI);
+
     DECLARE_MESSAGE_MAP()
 };
