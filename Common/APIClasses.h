@@ -41,4 +41,6 @@ public:
     virtual std::vector<IChessman*> GetKilledChessmen(ChessColor playerColor) = 0;
     virtual StepResult PawnRespawn(ChessColor playerColor, std::string &sPos, std::string &sChessmanName) = 0;
     virtual size_t GetStepNumber() = 0;
+    virtual bool GoToPreviousStep() = 0;
+    virtual bool GoToNextStep() = 0;
 };

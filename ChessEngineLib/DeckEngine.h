@@ -22,9 +22,9 @@ public:
     virtual std::vector<IChessman*> GetKilledChessmen(ChessColor playerColor);
     virtual StepResult PawnRespawn(ChessColor playerColor, std::string &sPos, std::string &sChessmanName);
     virtual size_t GetStepNumber();
+    virtual bool GoToPreviousStep();
+    virtual bool GoToNextStep();
 
-    void SetDeck(Deck &deck);
-    Deck GetDeckCopy();
 protected:
     StepResult DoMakeStep(DeckCell *pOldCell, DeckCell *pNewCell, std::vector<CellPos> &additionalCells);
     StepsPossibility GetPossibleSteps(Chessman *pChessman);
@@ -52,6 +52,8 @@ protected:
     bool AddChessmanActionForCell(DeckCell *pCell, ChessColor figureColor, StepsPossibility &steps);
 
     void IncStepNumber();
+    void SetDeck(Deck &deck);
+    Deck GetDeckCopy();
 
 protected:
     Deck m_Deck;

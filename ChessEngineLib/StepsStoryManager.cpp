@@ -109,10 +109,38 @@ void StepsStoryManager::UpdateLastStepAfterPawnRespawn(ChessmanValue respawnChes
     }
 }
 
-Deck* StepsStoryManager::GetStepBack(Deck& sourceDeck, StepStoryRecord &stepRecord)
+StepStoryRecord* StepsStoryManager::GetStepBack(Deck& sourceDeck)
 {
+    auto it = std::find_if(m_Steps.begin(), m_Steps.end(), [&sourceDeck](StepStoryRecord &record) {
+        return (sourceDeck.m_nStepNumber - 1) == record.m_nStepNumber;
+    });
 
+    if (it != m_Steps.end())
+        return &(*it);
+    else
+        return nullptr;
+}
 
+StepStoryRecord* StepsStoryManager::GetStepForward(Deck& sourceDeck)
+{
+    auto it = std::find_if(m_Steps.begin(), m_Steps.end(), [&sourceDeck](StepStoryRecord &record) {
+        return (sourceDeck.m_nStepNumber + 1) == record.m_nStepNumber;
+    });
 
-    return &m_pDeckEngine->GetDeckCopy();
+    if (it != m_Steps.end())
+        return &(*it);
+    else
+        return nullptr;
+}
+
+StepStoryRecord* StepsStoryManager::GetStepN(size_t stepNumber)
+{
+    auto it = std::find_if(m_Steps.begin(), m_Steps.end(), [&stepNumber](StepStoryRecord &record) {
+        return stepNumber == record.m_nStepNumber;
+    });
+
+    if (it != m_Steps.end())
+        return &(*it);
+    else
+        return nullptr;
 }

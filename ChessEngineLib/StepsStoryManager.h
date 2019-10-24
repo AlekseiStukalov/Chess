@@ -30,11 +30,9 @@ public:
     void AddStep(StepResult &result, std::string &sOldPos, std::string &sNewPos, Deck &deck);
     void UpdateLastStepAfterPawnRespawn(ChessmanValue respawnChessmanValue);
 
-    Deck* GetStepBack(Deck& sourceDeck, StepStoryRecord &stepRecord);
-
-    //step forward
-
-    //go to step number N
+    StepStoryRecord* GetStepBack(Deck& sourceDeck);
+    StepStoryRecord* GetStepForward(Deck& sourceDeck);
+    StepStoryRecord* GetStepN(size_t stepNumber);
 
 private:
     std::list<StepStoryRecord> m_Steps;

@@ -213,14 +213,30 @@ size_t DeckEngine::GetStepNumber()
     return m_Deck.m_nStepNumber;
 }
 
-void DeckEngine::SetDeck(Deck &deck)
+bool DeckEngine::GoToPreviousStep()
 {
-    m_Deck = deck;
+    StepStoryRecord *stepRecord = m_StoryManager.GetStepBack(m_Deck);
+
+    if (stepRecord)
+    {
+        m_Deck = stepRecord->m_Deck;
+        return true;
+    }
+
+    return false;
 }
 
-Deck DeckEngine::GetDeckCopy()
+bool DeckEngine::GoToNextStep()
 {
-    return m_Deck;
+    StepStoryRecord *stepRecord = m_StoryManager.GetStepForward(m_Deck);
+
+    if (stepRecord)
+    {
+        m_Deck = stepRecord->m_Deck;
+        return true;
+    }
+
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -1082,5 +1098,15 @@ bool DeckEngine::AddChessmanActionForCell(DeckCell *pCell, ChessColor figureColo
 void DeckEngine::IncStepNumber()
 {
     m_Deck.m_nStepNumber++;
+}
+
+void DeckEngine::SetDeck(Deck &deck)
+{
+    m_Deck = deck;
+}
+
+Deck DeckEngine::GetDeckCopy()
+{
+    return m_Deck;
 }
 
