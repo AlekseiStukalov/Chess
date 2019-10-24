@@ -39,6 +39,7 @@
 
 
 
+#include <afxdhtml.h>        // HTML Dialogs
 
 
 #ifdef _UNICODE

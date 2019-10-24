@@ -46,48 +46,15 @@ res\ChessMFC.rc2
     Visual C++. You should place all resources not editable by
     the resource editor in this file.
 
-/////////////////////////////////////////////////////////////////////////////
-
-For the main frame window:
-    The project includes a standard MFC interface.
-
-MainFrm.h, MainFrm.cpp
-    These files contain the frame class CMainFrame, which is derived from
-    CMDIFrameWnd and controls all MDI frame features.
-
-res\Toolbar.bmp
-    This bitmap file is used to create tiled images for the toolbar.
-    The initial toolbar and status bar are constructed in the CMainFrame
-    class. Edit this toolbar bitmap using the resource editor, and
-    update the IDR_MAINFRAME TOOLBAR array in ChessMFC.rc to add
-    toolbar buttons.
-/////////////////////////////////////////////////////////////////////////////
-
-For the child frame window:
-
-ChildFrm.h, ChildFrm.cpp
-    These files define and implement the CChildFrame class, which
-    supports the child windows in an MDI application.
 
 /////////////////////////////////////////////////////////////////////////////
 
-The application wizard creates one document type and one view:
+The application wizard creates one dialog class:
 
-ChessMFCDoc.h, ChessMFCDoc.cpp - the document
-    These files contain your CChessMFCDoc class.  Edit these files to
-    add your special document data and to implement file saving and loading
-    (via CChessMFCDoc::Serialize).
-
-ChessMFCView.h, ChessMFCView.cpp - the view of the document
-    These files contain your CChessMFCView class.
-    CChessMFCView objects are used to view CChessMFCDoc objects.
-
-res\ChessMFCDoc.ico
-    This is an icon file, which is used as the icon for MDI child windows
-    for the CChessMFCDoc class.  This icon is included by the main
-    resource file ChessMFC.rc.
-
-
+ChessMFCDlg.h, ChessMFCDlg.cpp - the dialog
+    These files contain your CChessMFCDlg class.  This class defines
+    the behavior of your application's main dialog.  The dialog's template is
+    in ChessMFC.rc, which can be edited in Microsoft Visual C++.
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -107,9 +74,6 @@ hlp\afxcore.htm
     This file contains the standard help topics for standard MFC
     commands and screen objects. Add your own help topics to this file.
 
-hlp\afxprint.htm
-    This file contains the help topics for the printing commands.
-
 makehtmlhelp.bat
     This file is used by the build system to compile the help files.
 
@@ -124,10 +88,6 @@ Other Features:
 
 ActiveX Controls
     The application includes support to use ActiveX controls.
-
-Printing and Print Preview support
-    The application wizard has generated code to handle the print, print setup, and print preview
-    commands by calling member functions in the CView class from the MFC library.
 
 /////////////////////////////////////////////////////////////////////////////
 
