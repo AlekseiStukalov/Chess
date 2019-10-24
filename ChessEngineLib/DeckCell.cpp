@@ -15,22 +15,22 @@ DeckCell::~DeckCell()
     m_pChessman = nullptr;
 }
 
-ChessColor DeckCell::GetCellColor()
+ChessColor DeckCell::GetCellColor() const
 {
     return m_nCellColor;
 }
 
-IChessman* DeckCell::GetChessman()
+IChessman* DeckCell::GetChessman() const
 {
     return (IChessman*)m_pChessman;
 }
 
-std::string DeckCell::GetCellName()
+std::string DeckCell::GetCellName() const
 {
     return m_sCellName;
 }
 
-CellPos DeckCell::GetCellPos()
+CellPos DeckCell::GetCellPos() const
 {
     return m_CellPos;
 }

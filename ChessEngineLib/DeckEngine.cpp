@@ -12,6 +12,7 @@ IDeckEngine* ChessEngine::CreateDeck()
 //-------------------------------------------------
 DeckEngine::DeckEngine()
 {
+
     m_Deck.Create();
     FillChessmenInitState();
     m_StoryManager.Initialize(this);
@@ -69,7 +70,7 @@ StepResult DeckEngine::MakeStep(ChessColor playerColor, std::string &sOldPos, st
     {
         result = DoMakeStep(pOldCell, pNewCell, steps.AdditionalCells);
 
-        m_StoryManager.AddStep(result, sOldPos, sNewPos);
+        m_StoryManager.AddStep(result, sOldPos, sNewPos, GetDeckCopy());
     }
     else
         result.nError = E_CAN_NOT_MOVE_TO_CELL;
@@ -1033,7 +1034,6 @@ Chessman* DeckEngine::RemoveFigure(CellPos &cellPos)
         DeckCell *pCell = (DeckCell*)GetCell(cellPos);
         pCell->SetChessman(nullptr);
         pRemovingChessman->SetCurrentCell(nullptr);
-        pRemovingChessman->SetKilled();
     }
 
     return pRemovingChessman;

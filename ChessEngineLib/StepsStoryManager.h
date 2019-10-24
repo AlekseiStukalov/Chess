@@ -5,6 +5,19 @@
 class DeckEngine;
 class Deck;
 
+class StepStoryRecord
+{
+public:
+    StepStoryRecord() {};
+    ~StepStoryRecord() {};
+
+    size_t m_nStepNumber;
+    std::string m_sStepName;   //https://en.wikipedia.org/wiki/Chess_notation
+    StepResult m_StepResult;
+
+    Deck m_Deck;
+};
+
 class StepsStoryManager
 {
 public:
@@ -14,7 +27,7 @@ public:
     void Initialize(DeckEngine *pDeck);
     std::list<StepStoryRecord> GetStory();
 
-    void AddStep(StepResult &result, std::string &sOldPos, std::string &sNewPos);
+    void AddStep(StepResult &result, std::string &sOldPos, std::string &sNewPos, Deck &deck);
     void UpdateLastStepAfterPawnRespawn(ChessmanValue respawnChessmanValue);
 
     Deck* GetStepBack(Deck& sourceDeck, StepStoryRecord &stepRecord);
@@ -26,8 +39,6 @@ public:
 private:
     std::list<StepStoryRecord> m_Steps;
     DeckEngine *m_pDeckEngine;
-    Deck *m_pBufferDeck;
-    Deck *m_pOriginalDeck;
     size_t m_nKilledChessmen;
 };
 

@@ -6,6 +6,7 @@
 class IDeckCell;
 class DeckCell;
 
+//sizeof = 40(24)
 class Chessman : IChessman
 {
 public:
@@ -13,19 +14,17 @@ public:
     Chessman(ChessColor nChessmanColor, ChessmanValue nChessmanValue);
     ~Chessman();
 
-    virtual IDeckCell* GetCurrentCell();
-    virtual ChessColor GetChessmanColor();
-    virtual ChessmanValue GetChessmanValue();
-    virtual bool IsKilled();
+    virtual IDeckCell* GetCurrentCell() const;
+    virtual ChessColor GetChessmanColor() const;
+    virtual ChessmanValue GetChessmanValue() const;
 
     void SetCurrentCell(DeckCell *pCell);
     void SetChessmanColor(ChessColor nColor);
     void SetChessmanValue(ChessmanValue nValue);
-    void SetKilled();
-    size_t GetChessmanStepNumber();
-    void IncChessmanStepNumber();
+    size_t GetChessmanStepNumber() const;
+    size_t GetChessmanlastUsedStepNumber() const;
 
-    size_t GetChessmanlastUsedStepNumber();
+    void IncChessmanStepNumber();
     void SetChessmanLastUsed(size_t lastUsed);
 
 protected:
@@ -35,7 +34,6 @@ protected:
     ChessColor m_nChessmanColor;
     ChessmanValue m_nChessmanValue;
 
-    bool m_bKilled;
     size_t m_nChessmanStepNumber;
     size_t m_nLastUsedStepNumber;
 };

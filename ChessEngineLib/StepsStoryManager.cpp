@@ -3,30 +3,15 @@
 #include "DeckEngine.h"
 #include "EngineHelper.h"
 
-#define STEP_QUIET "-"
-#define STEP_KILL "x"
-#define STEP_CHECK "+"
-#define STEP_CHECKMATE "#"
-#define STEP_EN_PASSAN "e.p."
-#define STEP_STANDOFF "="
-#define STEP_CASTLING_A "0-0-0"
-#define STEP_CASTLING_H "0-0"
-#define STEP_PAWN_RESPAWN "RESP:"
-#define SEPARATOR "%"
-
-
 StepsStoryManager::StepsStoryManager()
 {
     m_pDeckEngine = nullptr;
-    m_pBufferDeck = nullptr;
-    m_pOriginalDeck = nullptr;
     m_nKilledChessmen = 0;
 }
 
 StepsStoryManager::~StepsStoryManager()
 {
     m_pDeckEngine = nullptr;
-    delete m_pBufferDeck;
 }
 
 void StepsStoryManager::Initialize(DeckEngine *pDeck)
@@ -39,7 +24,7 @@ std::list<StepStoryRecord> StepsStoryManager::GetStory()
     return m_Steps;
 }
 
-void StepsStoryManager::AddStep(StepResult &result, std::string &sOldPos, std::string &sNewPos)
+void StepsStoryManager::AddStep(StepResult &result, std::string &sOldPos, std::string &sNewPos, Deck &deck)
 {
     IChessman *pChessman = m_pDeckEngine->GetCell(sNewPos)->GetChessman();
 
@@ -57,6 +42,7 @@ void StepsStoryManager::AddStep(StepResult &result, std::string &sOldPos, std::s
     StepStoryRecord record;
     record.m_StepResult = result;
     record.m_nStepNumber = m_pDeckEngine->GetStepNumber();
+    record.m_Deck = std::move(deck);
 
 
     record.m_sStepName += sOldPos;
@@ -125,25 +111,8 @@ void StepsStoryManager::UpdateLastStepAfterPawnRespawn(ChessmanValue respawnChes
 
 Deck* StepsStoryManager::GetStepBack(Deck& sourceDeck, StepStoryRecord &stepRecord)
 {
-    if (!m_pBufferDeck)
-    {
-        m_pBufferDeck = new Deck();
-        m_pBufferDeck->Create();
-    }
 
 
 
-
-
-    m_pBufferDeck = &m_pDeckEngine->GetDeckCopy();
-
-
-
-
-
-
-
-    return m_pBufferDeck;
-
-    //
+    return &m_pDeckEngine->GetDeckCopy();
 }

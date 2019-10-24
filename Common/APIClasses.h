@@ -15,19 +15,18 @@ public:
 class IChessman
 {
 public:
-    virtual IDeckCell* GetCurrentCell() = 0;
-    virtual ChessColor GetChessmanColor() = 0;
-    virtual ChessmanValue GetChessmanValue() = 0;
-    virtual bool IsKilled() = 0;
+    virtual IDeckCell* GetCurrentCell() const = 0;
+    virtual ChessColor GetChessmanColor() const = 0;
+    virtual ChessmanValue GetChessmanValue() const = 0;
 };
 
 class IDeckCell
 {
 public:
-    virtual ChessColor GetCellColor() = 0;
-    virtual IChessman* GetChessman() = 0;
-    virtual std::string GetCellName() = 0;
-    virtual CellPos GetCellPos() = 0;
+    virtual ChessColor GetCellColor() const = 0;
+    virtual IChessman* GetChessman() const = 0;
+    virtual std::string GetCellName() const = 0;
+    virtual CellPos GetCellPos() const = 0;
 };
 
 class IDeckEngine

@@ -4,16 +4,17 @@
 
 class Chessman;
 
+//sizeof = 72(48)
 class DeckCell : public IDeckCell
 {
 public:
     DeckCell();
     ~DeckCell();
 
-    virtual ChessColor GetCellColor();
-    virtual IChessman* GetChessman();
-    virtual std::string GetCellName();
-    virtual CellPos GetCellPos();
+    virtual ChessColor GetCellColor() const;
+    virtual IChessman* GetChessman() const;
+    virtual std::string GetCellName() const;
+    virtual CellPos GetCellPos() const;
 
     void SetCellColor(ChessColor color);
     void SetChessman(Chessman *pChessman);

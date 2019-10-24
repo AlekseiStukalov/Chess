@@ -3,6 +3,19 @@
 
 #include "Includes.h"
 
+//Steps notation
+#define STEP_QUIET "-"
+#define STEP_KILL "x"
+#define STEP_CHECK "+"
+#define STEP_CHECKMATE "#"
+#define STEP_EN_PASSAN "e.p."
+#define STEP_STANDOFF "="
+#define STEP_CASTLING_A "0-0-0"
+#define STEP_CASTLING_H "0-0"
+#define STEP_PAWN_RESPAWN "RESP:"
+#define SEPARATOR "%"
+
+
 enum MakeStepError
 {
     E_NO_ERROR,
@@ -52,6 +65,10 @@ enum ThreatToKing
     Stalemate,
     None
 };
+
+
+
+
 
 struct StepResult
 {
@@ -190,18 +207,6 @@ public:
 private:
 
     std::vector<ChessmanPossibleSteps> m_AllSteps;
-};
-
-
-class StepStoryRecord
-{
-public:
-    StepStoryRecord() {};
-    ~StepStoryRecord() {};
-
-    size_t m_nStepNumber;
-    std::string m_sStepName;   //https://en.wikipedia.org/wiki/Chess_notation
-    StepResult m_StepResult;
 };
 
 
