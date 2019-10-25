@@ -25,35 +25,54 @@ void CChessMFCDlg::DoDataExchange(CDataExchange* pDX)
     CDialog::DoDataExchange(pDX);
 }
 
-void CChessMFCDlg::DrawDesk()
+void CChessMFCDlg::DrawDesk(CPoint &lTop, CPoint &rBottom)
 {
-    CImage pngImage;
-    CBitmap pngBmp;
-    CBitmap *pOldbmp;
-
-
-    CDC bmDC;
-    BITMAP  bi;
-    UINT xPos = 384, yPos = 128;
-
-    CClientDC dc(this);
-
-    pngImage.LoadFromResource(AfxGetInstanceHandle(), IDB_CHESSMEN);
-
-    IDB_CHESSMEN;
-
     CPaintDC dc(this);
-    CPen *pen = new CPen(PS_SOLID, 3, RGB(0, 0, 0));
-    dc.SelectObject(pen);
-    dc.MoveTo(10, 10);
-    dc.LineTo(10, 150);
+    CImageList imageList;
+    imageList.Create(IDB_CHESSMEN, 64, 0, RGB(0, 0, 0));
+
+
+
+
+    //CPen *pen = new CPen(PS_SOLID, 3, RGB(0, 0, 0));
+    //dc.SelectObject(pen);
+    //dc.MoveTo(10, 10);
+    //dc.LineTo(10, 150);
+    //delete pen;
 
     CRect rc(0, 0, 150, 150);
-    CBrush br(RGB(0, 0, 0));
+    FillRect(dc, rc, CBrush(RGB(150, 60, 0)));
 
-    FillRect(dc,rc, br);
+    imageList.Draw(&dc, 0, CPoint(10, 10), ILD_TRANSPARENT);
 
-    delete pen;
+
+
+
+
+
+    IMAGEINFO iinfo;
+    imageList.GetImageInfo(1, &iinfo);
+    CDC DCMem;
+    DCMem.CreateCompatibleDC(&dc);
+    DCMem.SelectObject(iinfo.hbmImage);
+
+
+
+    BITMAP bm;
+    GetObject(iinfo.hbmImage, sizeof(bm), &bm);
+    CRect source(0, 0, bm.bmWidth, bm.bmHeight);
+
+    CRect dest(0, 0, 16, 16);
+
+    dc.StretchBlt(dest.left, dest.top, dest.Width(), dest.Height(), &DCMem, 80,80, source.Width(), source.Height(), SRCCOPY);
+
+    DCMem.DeleteDC();
+
+
+
+
+
+
 }
 
 BEGIN_MESSAGE_MAP(CChessMFCDlg, CDialog)
@@ -96,7 +115,7 @@ void CChessMFCDlg::OnPaint()
     }
     else
     {
-        DrawDesk();
+        DrawDesk(CPoint(0,0), CPoint(500, 500));
         CDialog::OnPaint();
     }
 }

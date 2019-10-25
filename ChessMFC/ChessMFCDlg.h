@@ -13,7 +13,7 @@ public:
 
 protected:
     virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
-    void DrawDesk();
+    void DrawDesk(CPoint &lTop, CPoint &rBottom);
 
     HRESULT OnButtonOK(IHTMLElement *pElement);
     HRESULT OnButtonCancel(IHTMLElement *pElement);
