@@ -31,9 +31,7 @@ void CChessMFCDlg::DrawDesk(CPoint &lTop, CPoint &rBottom)
     CImageList imageList;
     imageList.Create(IDB_CHESSMEN, 64, 0, RGB(0, 0, 0));
 
-
-
-
+    //draw line
     //CPen *pen = new CPen(PS_SOLID, 3, RGB(0, 0, 0));
     //dc.SelectObject(pen);
     //dc.MoveTo(10, 10);
@@ -43,33 +41,32 @@ void CChessMFCDlg::DrawDesk(CPoint &lTop, CPoint &rBottom)
     CRect rc(0, 0, 150, 150);
     FillRect(dc, rc, CBrush(RGB(150, 60, 0)));
 
-    imageList.Draw(&dc, 0, CPoint(10, 10), ILD_TRANSPARENT);
-
-
-
+    //imageList.Draw(&dc, 0, CPoint(0, 0), ILD_TRANSPARENT);
 
 
 
     IMAGEINFO iinfo;
     imageList.GetImageInfo(1, &iinfo);
-    CDC DCMem;
-    DCMem.CreateCompatibleDC(&dc);
-    DCMem.SelectObject(iinfo.hbmImage);
+
+    CBitmap *pBitmap = CBitmap::FromHandle(iinfo.hbmImage);
 
 
+    CDC MemDC;
+    MemDC.CreateCompatibleDC(&dc);
+    CBitmap* pOldBitmap = dc.SelectObject(pBitmap);
 
-    BITMAP bm;
-    GetObject(iinfo.hbmImage, sizeof(bm), &bm);
-    CRect source(0, 0, bm.bmWidth, bm.bmHeight);
+    int bmw, bmh;
+    BITMAP bmap;
+    pBitmap->GetBitmap(&bmap);
+    bmw = bmap.bmWidth;
+    bmh = bmap.bmHeight;
+    int xo = 0, yo = 0;
 
-    CRect dest(0, 0, 16, 16);
+    dc.StretchBlt(xo, yo, 32,
+        32, &MemDC,
+        0, 0, bmw, bmh, SRCCOPY);
 
-    dc.StretchBlt(dest.left, dest.top, dest.Width(), dest.Height(), &DCMem, 80,80, source.Width(), source.Height(), SRCCOPY);
-
-    DCMem.DeleteDC();
-
-
-
+    MemDC.SelectObject(pOldBitmap);
 
 
 
