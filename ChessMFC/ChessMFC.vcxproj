@@ -185,6 +185,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Common\APIClasses.h" />
+    <ClInclude Include="..\Common\Defines.h" />
+    <ClInclude Include="..\Common\Includes.h" />
+    <ClInclude Include="..\Common\Structures.h" />
     <ClInclude Include="ChessMFC.h" />
     <ClInclude Include="ChessMFCDlg.h" />
     <ClInclude Include="Resource.h" />
