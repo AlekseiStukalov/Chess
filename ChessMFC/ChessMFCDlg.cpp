@@ -33,6 +33,7 @@ BEGIN_MESSAGE_MAP(CChessMFCDlg, CDialog)
     ON_WM_PAINT()
     ON_WM_GETMINMAXINFO()
     ON_WM_ERASEBKGND()
+    ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 
@@ -392,6 +393,23 @@ int CChessMFCDlg::GetBmChessmanOffset(ChessmanValue value, ChessColor color)
     }
 
     return pos + offset;
+}
+
+void CChessMFCDlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+    CDialog::OnLButtonDown(nFlags, point);
+
+    CPoint pos;
+    ::GetCursorPos(&pos);
+    ScreenToClient(&pos);
+
+
+
+
+
+    int a = 0;
+    a++;
+
 }
 
 void CChessMFCDlg::OnSize(UINT nType, int cx, int cy)

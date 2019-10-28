@@ -33,7 +33,7 @@ protected:
     void DrawChessman__Resizeable(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect);
     int GetBmChessmanOffset(ChessmanValue value, ChessColor color);
 
-
+    afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
     afx_msg void OnSize(UINT nType, int cx, int cy);
     afx_msg BOOL OnEraseBkgnd(CDC* pDC);
     afx_msg void OnPaint();
