@@ -271,8 +271,6 @@ void CChessMFCDlg::OnPaint()
     }
 }
 
-// The system calls this function to obtain the cursor to display while the user drags
-//  the minimized window.
 HCURSOR CChessMFCDlg::OnQueryDragIcon()
 {
     return static_cast<HCURSOR>(m_hIcon);
@@ -485,9 +483,21 @@ void CChessMFCDlg::OnLButtonDown(UINT nFlags, CPoint point)
         if (m_StepsPossibility.Empty())
             m_RedrawFlags.bRedrawMarks = true;
         else
+        {
             m_RedrawFlags.SetAll(true);
 
+            IDeckCell* pCurrCell = m_pDeckEngine->GetCell(m_SelectedCell);
+            IDeckCell* pNewCell = m_pDeckEngine->GetCell(cellPos);
+            if (pNewCell && pCurrCell)
+            {
+                StepResult res = m_pDeckEngine->MakeStep(m_CurrentPlayerColor, pCurrCell->GetCellName(), pNewCell->GetCellName());
+
+            }
+
+        }
+
         m_StepsPossibility = m_pDeckEngine->GetPossibleSteps(cellPos);
+        m_SelectedCell = cellPos;
     }
     else
     {
@@ -496,6 +506,9 @@ void CChessMFCDlg::OnLButtonDown(UINT nFlags, CPoint point)
             m_StepsPossibility.Clear();
             m_RedrawFlags.SetAll(true);
         }
+
+        m_SelectedCell.LiterNumber = 0;
+        m_SelectedCell.Number = 0;
     }
 
     RedrawWindow();

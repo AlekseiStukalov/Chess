@@ -53,15 +53,17 @@ protected:
     DECLARE_MESSAGE_MAP()
 
 private:
-    IDeckEngine *m_pDeckEngine;
     HICON m_hIcon;
     CBitmap m_bmChessmen;
     CImageList m_ilChessmen;
+    RedrawFlags m_RedrawFlags;
+
+    CPoint m_StartPoint;
     int m_nCellSize;
     int m_nCoordFieldWidth;
+    CellPos m_SelectedCell;
 
+    IDeckEngine *m_pDeckEngine;
     StepsPossibility m_StepsPossibility;
-    RedrawFlags m_RedrawFlags;
-    CPoint m_StartPoint;
-
+    ChessColor m_CurrentPlayerColor;
 };
