@@ -155,7 +155,7 @@ struct StepsPossibility
 private:
     void AddNewPositions(std::vector<CellPos> &dest, std::vector<CellPos> &src)
     {
-        for (size_t i = 0; src.size(); i++)
+        for (size_t i = 0; i < src.size(); i++)
         {
             if (!IsPosExists(dest, src[i]))
                 dest.push_back(src[i]);
