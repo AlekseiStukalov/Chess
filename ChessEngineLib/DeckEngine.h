@@ -14,7 +14,7 @@ public:
     ~DeckEngine() {};
 
     virtual StepResult MakeStep(ChessColor playerColor, std::string &sOldPos, std::string &sNewPos);
-    virtual StepsPossibility GetPossibleSteps(std::string &cellName);///All possible steps with cells, where this figure will be under attack
+    virtual StepsPossibility GetPossibleSteps(CellPos &cellPos);///All possible steps with cells, where this figure will be under attack
     virtual IDeckCell* GetCell(std::string &cellName);
     virtual IDeckCell* GetCell(CellPos &cellPos);
     virtual IDeckCell* GetCell(int number, int literNumber);

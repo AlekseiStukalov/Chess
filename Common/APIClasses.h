@@ -33,7 +33,7 @@ class IDeckEngine
 {
 public:
     virtual StepResult MakeStep(ChessColor playerColor, std::string &sOldPos, std::string &sNewPos) = 0;
-    virtual StepsPossibility GetPossibleSteps(std::string &cellName) = 0;
+    virtual StepsPossibility GetPossibleSteps(CellPos &cellPos) = 0;
     virtual IDeckCell* GetCell(std::string &cellName) = 0;
     virtual IDeckCell* GetCell(CellPos &cellPos) = 0;
     virtual IDeckCell* GetCell(int number, int literNumber) = 0;

@@ -48,7 +48,7 @@ StepResult DeckEngine::MakeStep(ChessColor playerColor, std::string &sOldPos, st
         return result;
     }
 
-    IChessman* pChessman = GetCell(sOldPos)->GetChessman();
+    IChessman* pChessman = pOldCell->GetChessman();
     if (!pChessman)
     {
         result.nError = E_START_CELL_HAVE_NO_CHESSMAN;
@@ -64,7 +64,7 @@ StepResult DeckEngine::MakeStep(ChessColor playerColor, std::string &sOldPos, st
     CellPos newCellPos = pNewCell->GetCellPos();
     CellPos oldCellPos = pOldCell->GetCellPos();
 
-    StepsPossibility steps = GetPossibleSteps(sOldPos);
+    StepsPossibility steps = GetPossibleSteps(pOldCell->GetCellPos());
 
     if (steps.IsPosExists(steps.CanStep, newCellPos) || steps.IsPosExists(steps.CanKill, newCellPos))
     {
@@ -78,10 +78,10 @@ StepResult DeckEngine::MakeStep(ChessColor playerColor, std::string &sOldPos, st
     return result;
 }
 
-StepsPossibility DeckEngine::GetPossibleSteps(std::string &cellName)
+StepsPossibility DeckEngine::GetPossibleSteps(CellPos &cellPos)
 {
     StepsPossibility steps;
-    IDeckCell *pCell = GetCell(cellName);
+    IDeckCell *pCell = GetCell(cellPos);
     if (pCell)
     {
         Chessman *pChessman = (Chessman *)pCell->GetChessman();

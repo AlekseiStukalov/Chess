@@ -4,6 +4,14 @@
 
 class IDeckEngine;
 
+struct RedrawFlags
+{
+    void SetAll(bool bValue);
+
+    bool bRedrawDesk;
+    bool bRedrawMarks;
+};
+
 class CChessMFCDlg : public CDialog
 {
 public:
@@ -17,9 +25,12 @@ protected:
     virtual void DoDataExchange(CDataExchange* pDX);
     virtual BOOL OnInitDialog();
 
-    void DrawCoordinates(CDC* pDC, CPoint &lTop, ChessColor currentPlayerColor);
-    void DrawDesk(CDC* pDC, CPoint &lTop, ChessColor currentPlayerColor);
-    void DrawChessmen(CDC* pDC, CPoint &lTop, ChessColor currentPlayerColor);
+    void DrawCoordinates(CDC* pDC, ChessColor currentPlayerColor);
+    void DrawRawDesk(CDC* pDC, ChessColor currentPlayerColor);
+    void DrawDesk(CDC* pDC, ChessColor currentPlayerColor);
+    void DrawChessmen(CDC* pDC, ChessColor currentPlayerColor);
+    void DrawMarks(CDC* pDC, ChessColor currentPlayerColor);
+    void DrawMarksPart(CDC* pDC, ChessColor currentPlayerColor, std::vector<CellPos>& positions, CPen &pen);
 
     HRESULT OnButtonOK(IHTMLElement *pElement);
     HRESULT OnButtonCancel(IHTMLElement *pElement);
@@ -27,8 +38,7 @@ protected:
 protected:
     void DrawChessman(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect);
     int GetBmChessmanNumber(ChessmanValue value, ChessColor color);
-
-
+    CRect GetRectByCellPos(CellPos &pos);
 
     void DrawChessman__Resizeable(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect);
     int GetBmChessmanOffset(ChessmanValue value, ChessColor color);
@@ -42,12 +52,16 @@ protected:
 
     DECLARE_MESSAGE_MAP()
 
+private:
     IDeckEngine *m_pDeckEngine;
     HICON m_hIcon;
     CBitmap m_bmChessmen;
+    CImageList m_ilChessmen;
     int m_nCellSize;
     int m_nCoordFieldWidth;
 
+    StepsPossibility m_StepsPossibility;
+    RedrawFlags m_RedrawFlags;
     CPoint m_StartPoint;
 
 };

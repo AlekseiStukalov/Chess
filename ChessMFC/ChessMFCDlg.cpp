@@ -1,7 +1,3 @@
-
-// ChessMFCDlg.cpp : implementation file
-//
-
 #include "stdafx.h"
 #include "ChessMFC.h"
 #include "ChessMFCDlg.h"
@@ -12,15 +8,23 @@
 #endif
 
 
-// CChessMFCDlg dialog
+void RedrawFlags::SetAll(bool bValue)
+{
+    bRedrawDesk = bValue;
+    bRedrawMarks = bValue;
+}
+
+// CChessMFCDlg
 
 CChessMFCDlg::CChessMFCDlg(CWnd* pParent /*=NULL*/)
     : CDialog(IDD_CHESSMFC_DIALOG, pParent)
 {
     m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-    m_nCellSize = 0;
-    m_nCoordFieldWidth = 0;
     m_pDeckEngine = nullptr;
+
+    //default
+    m_nCellSize = 64;
+    m_nCoordFieldWidth = 30;
 }
 
 void CChessMFCDlg::DoDataExchange(CDataExchange* pDX)
@@ -45,8 +49,10 @@ BOOL CChessMFCDlg::OnInitDialog()
 
     ChessEngine engine;
     m_pDeckEngine = engine.CreateDeck();
+    m_RedrawFlags.SetAll(true);
 
     m_bmChessmen.LoadBitmap(IDB_CHESSMEN);
+    m_ilChessmen.Create(IDB_CHESSMEN, 64, 0, RGB(0, 0, 0));
 
     m_StartPoint.x = 10;
     m_StartPoint.y = 10;
@@ -55,8 +61,11 @@ BOOL CChessMFCDlg::OnInitDialog()
     return TRUE;
 }
 
-void CChessMFCDlg::DrawCoordinates(CDC* pDC, CPoint &lTop, ChessColor currentPlayerColor)
+void CChessMFCDlg::DrawCoordinates(CDC* pDC, ChessColor currentPlayerColor)
 {
+    int deckStartPosX = m_StartPoint.x + m_nCoordFieldWidth;
+    int deckStartPosY = m_StartPoint.y + m_nCoordFieldWidth;
+
     COLORREF oldColor = pDC->SetBkColor(RGB(255, 255, 255));
 
     CFont* pOldFont = pDC->GetCurrentFont();
@@ -69,33 +78,33 @@ void CChessMFCDlg::DrawCoordinates(CDC* pDC, CPoint &lTop, ChessColor currentPla
     newFont.CreateFontIndirect(&logFont);
     pDC->SelectObject(&newFont);
 
-    int bTop = m_nCoordFieldWidth + m_nCellSize * 8 + lTop.y;
+    int bTop = deckStartPosY + m_nCellSize * 8;
     int bBottom = bTop + m_nCoordFieldWidth;
     for (int literNumber = 0; literNumber < 8; literNumber++)
     {
         wchar_t c = L'a' + literNumber;
         CString str(c);
 
-        int left = m_nCoordFieldWidth + literNumber*m_nCellSize + lTop.x;
+        int left = deckStartPosX + literNumber*m_nCellSize;
         int right = left + m_nCellSize;
-        CRect rcTop(left, lTop.y, right, m_nCoordFieldWidth + lTop.y);
+        CRect rcTop(left, m_StartPoint.y, right, deckStartPosY);
         CRect rcBottom(left, bTop, right, bBottom);
 
         pDC->DrawText(str, rcTop, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
         pDC->DrawText(str, rcBottom, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
     }
 
-    int rLeft = m_nCoordFieldWidth + m_nCellSize * 8 + lTop.x;
+    int rLeft = deckStartPosX + m_nCellSize * 8;
     int rRight = rLeft + m_nCoordFieldWidth;
     for (int i = 0; i < 8; i++)
     {
         wchar_t c = L'8' - i;
         CString str(c);
 
-        int top = m_nCoordFieldWidth + i*m_nCellSize + lTop.y;
+        int top = deckStartPosY + i*m_nCellSize;
         int bottom = top + m_nCellSize;
 
-        CRect rcLeft(lTop.x, top, m_nCoordFieldWidth + lTop.x, bottom);
+        CRect rcLeft(m_StartPoint.x, top, deckStartPosX, bottom);
         CRect rcRight(rLeft, top, rRight, bottom);
 
         pDC->DrawText(str, rcLeft, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
@@ -106,12 +115,10 @@ void CChessMFCDlg::DrawCoordinates(CDC* pDC, CPoint &lTop, ChessColor currentPla
     pDC->SetBkColor(oldColor);
 }
 
-void CChessMFCDlg::DrawDesk(CDC* pDC, CPoint &lTop, ChessColor currentPlayerColor)
+void CChessMFCDlg::DrawRawDesk(CDC* pDC, ChessColor currentPlayerColor)
 {
-    DrawCoordinates(pDC, lTop, currentPlayerColor);
-
-    int deckStartPosX = lTop.x + m_nCoordFieldWidth;
-    int deckStartPosY = lTop.y + m_nCoordFieldWidth;
+    int deckStartPosX = m_StartPoint.x + m_nCoordFieldWidth;
+    int deckStartPosY = m_StartPoint.y + m_nCoordFieldWidth;
 
     for (int number = 0; number < 8; number++)
     {
@@ -136,14 +143,25 @@ void CChessMFCDlg::DrawDesk(CDC* pDC, CPoint &lTop, ChessColor currentPlayerColo
             FillRect(*pDC, rc, CBrush(color));
         }
     }
-
-    DrawChessmen(pDC, lTop, currentPlayerColor);
 }
 
-void CChessMFCDlg::DrawChessmen(CDC* pDC, CPoint &lTop, ChessColor currentPlayerColor)
+void CChessMFCDlg::DrawDesk(CDC* pDC, ChessColor currentPlayerColor)
 {
-    int deckStartPosX = lTop.x + m_nCoordFieldWidth;
-    int deckStartPosY = lTop.y + m_nCoordFieldWidth;
+    if (m_RedrawFlags.bRedrawDesk)
+    {
+        DrawCoordinates(pDC, currentPlayerColor);
+        DrawRawDesk(pDC, currentPlayerColor);
+        DrawChessmen(pDC, currentPlayerColor);
+    }
+
+    if (m_RedrawFlags.bRedrawMarks)
+        DrawMarks(pDC, currentPlayerColor);
+}
+
+void CChessMFCDlg::DrawChessmen(CDC* pDC, ChessColor currentPlayerColor)
+{
+    int deckStartPosX = m_StartPoint.x + m_nCoordFieldWidth;
+    int deckStartPosY = m_StartPoint.y + m_nCoordFieldWidth;
 
     for (int number = 0; number < 8; number++)
     {
@@ -167,30 +185,56 @@ void CChessMFCDlg::DrawChessmen(CDC* pDC, CPoint &lTop, ChessColor currentPlayer
     }
 }
 
+void CChessMFCDlg::DrawMarks(CDC* pDC, ChessColor currentPlayerColor)
+{
+    DrawMarksPart(pDC, currentPlayerColor, m_StepsPossibility.CanStep, CPen(PS_SOLID, 4, RGB(0, 255, 0)));
+    DrawMarksPart(pDC, currentPlayerColor, m_StepsPossibility.CanKill, CPen(PS_SOLID, 4, RGB(255, 0, 0)));
+    DrawMarksPart(pDC, currentPlayerColor, m_StepsPossibility.CanProtect, CPen(PS_SOLID, 4, RGB(0, 0, 255)));
+}
+
+void CChessMFCDlg::DrawMarksPart(CDC* pDC, ChessColor currentPlayerColor, std::vector<CellPos>& positions, CPen &pen)
+{
+    CPen *pOldPen = pDC->SelectObject(&pen);
+    for (size_t i = 0; i < positions.size(); i++)
+    {
+        CRect rc = GetRectByCellPos(positions[i]);
+        rc.InflateRect(-2, -2);
+
+        pDC->MoveTo(rc.left, rc.top);
+        pDC->LineTo(rc.right, rc.top);
+        pDC->LineTo(rc.right, rc.bottom);
+        pDC->LineTo(rc.left, rc.bottom);
+        pDC->LineTo(rc.left, rc.top);
+    }
+    pDC->SelectObject(pOldPen);
+}
+
 BOOL CChessMFCDlg::OnEraseBkgnd(CDC* pDC)
 {
-    CDialog::OnEraseBkgnd(pDC);
+    CPen *pOldPen = nullptr;
+    if (m_RedrawFlags.bRedrawDesk)
+    {
+        CDialog::OnEraseBkgnd(pDC);
+        CRect cRect;
+        GetClientRect(cRect);
+        FillRect(*pDC, cRect, CBrush(RGB(255, 255, 255)));
 
-    CRect cRect;
-    GetClientRect(cRect);
-    FillRect(*pDC, cRect, CBrush(RGB(255, 255, 255)));
+        CPen pen(PS_SOLID, 1, RGB(0, 0, 0));
+        CPen *pOldPen = pDC->SelectObject(&pen);
+        int borderOffsetX = m_StartPoint.x - 1;
+        int borderOffsetY = m_StartPoint.y - 1;
+        int deckWdth = m_nCellSize * 8 + m_nCoordFieldWidth * 2;
+        pDC->MoveTo(borderOffsetX, borderOffsetY);
+        pDC->LineTo(borderOffsetX + deckWdth, borderOffsetY);
+        pDC->LineTo(borderOffsetX + deckWdth, borderOffsetY + deckWdth);
+        pDC->LineTo(borderOffsetX, borderOffsetY + deckWdth);
+        pDC->LineTo(borderOffsetX, borderOffsetY);
+    }
 
-    CPen pen(PS_SOLID, 1, RGB(0, 0, 0));
-    CPen *pOldPen = pDC->SelectObject(&pen);
+    DrawDesk(pDC, CHESS_COLOR_WHITE);
 
-    int offset = 10;
-    int borderOffset = offset - 1;
-
-
-    int deckWdth = m_nCellSize * 8 + m_nCoordFieldWidth * 2;
-    pDC->MoveTo(CPoint(borderOffset, borderOffset));
-    pDC->LineTo(CPoint(borderOffset + deckWdth, borderOffset));
-    pDC->LineTo(CPoint(borderOffset + deckWdth, borderOffset + deckWdth));
-    pDC->LineTo(CPoint(borderOffset, borderOffset + deckWdth));
-    pDC->LineTo(CPoint(borderOffset, borderOffset));
-
-    DrawDesk(pDC, CPoint(offset, offset), CHESS_COLOR_WHITE);
-    pDC->SelectObject(pOldPen);
+    if(pOldPen)
+        pDC->SelectObject(pOldPen);
 
 
     return TRUE;
@@ -236,8 +280,14 @@ HCURSOR CChessMFCDlg::OnQueryDragIcon()
 
 void CChessMFCDlg::OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI)
 {
-    lpMMI->ptMinTrackSize.x = 600;
+    CDialog::OnGetMinMaxInfo(lpMMI);
+    lpMMI->ptMinTrackSize.x = m_StartPoint.x + 2 * m_nCoordFieldWidth + 8 * m_nCellSize;
+    lpMMI->ptMinTrackSize.y = m_StartPoint.y + 2 * m_nCoordFieldWidth + 8 * m_nCellSize;
+
+    lpMMI->ptMinTrackSize.x = 590;
     lpMMI->ptMinTrackSize.y = 630;
+
+    //570x577 wtf??
 }
 
 HRESULT CChessMFCDlg::OnButtonOK(IHTMLElement* /*pElement*/)
@@ -254,10 +304,8 @@ HRESULT CChessMFCDlg::OnButtonCancel(IHTMLElement* /*pElement*/)
 
 void CChessMFCDlg::DrawChessman(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect)
 {
-    CImageList imgList;
-    imgList.Create(IDB_CHESSMEN, 64, 0, RGB(0, 0, 0));
     int imgNumber = GetBmChessmanNumber(value, color);
-    imgList.Draw(pDC, imgNumber, CPoint(rect.left, rect.top), ILD_TRANSPARENT);
+    m_ilChessmen.Draw(pDC, imgNumber, CPoint(rect.left, rect.top), ILD_TRANSPARENT);
 }
 
 int CChessMFCDlg::GetBmChessmanNumber(ChessmanValue value, ChessColor color)
@@ -292,6 +340,22 @@ int CChessMFCDlg::GetBmChessmanNumber(ChessmanValue value, ChessColor color)
     }
 
     return pos + offset;
+}
+
+CRect CChessMFCDlg::GetRectByCellPos(CellPos &pos)
+{
+    int deckStartPosX = m_StartPoint.x + m_nCoordFieldWidth;
+    int deckStartPosY = m_StartPoint.y + m_nCoordFieldWidth;
+
+    CRect rect;
+    rect.left = deckStartPosX + (pos.LiterNumber - 1)*m_nCellSize;
+    rect.right = rect.left + m_nCellSize;
+
+    //rect.top = deckStartPosY + (7*m_nCellSize - (pos.Number - 1)*m_nCellSize);
+    rect.top = deckStartPosY + m_nCellSize*(8 - pos.Number);
+    rect.bottom = rect.top + m_nCellSize;
+
+    return rect;
 }
 
 HBITMAP CreateBitmapMask(HBITMAP hbmColour)
@@ -339,6 +403,9 @@ HBITMAP CreateBitmapMask(HBITMAP hbmColour)
 
 void CChessMFCDlg::DrawChessman__Resizeable(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect)
 {
+    //NOT IMPLEMENTED
+
+
     int bmOffset = GetBmChessmanOffset(value, color);
 
 
@@ -403,18 +470,41 @@ void CChessMFCDlg::OnLButtonDown(UINT nFlags, CPoint point)
     ::GetCursorPos(&pos);
     ScreenToClient(&pos);
 
+    pos.x -= (m_StartPoint.x + m_nCoordFieldWidth);
+    pos.y -= (m_StartPoint.y + m_nCoordFieldWidth);
 
+    m_RedrawFlags.SetAll(false);
 
+    int deckWidth = m_nCellSize * 8;
+    if (pos.x >= 0 && pos.y >= 0 && pos.x < deckWidth && pos.y < deckWidth)
+    {
+        CellPos cellPos;
+        cellPos.Number = 8 - (int)(pos.y / m_nCellSize);
+        cellPos.LiterNumber = (pos.x / m_nCellSize) + 1;
 
+        if (m_StepsPossibility.Empty())
+            m_RedrawFlags.bRedrawMarks = true;
+        else
+            m_RedrawFlags.SetAll(true);
 
-    int a = 0;
-    a++;
+        m_StepsPossibility = m_pDeckEngine->GetPossibleSteps(cellPos);
+    }
+    else
+    {
+        if (!m_StepsPossibility.Empty())
+        {
+            m_StepsPossibility.Clear();
+            m_RedrawFlags.SetAll(true);
+        }
+    }
 
+    RedrawWindow();
 }
 
 void CChessMFCDlg::OnSize(UINT nType, int cx, int cy)
 {
     CDialog::OnSize(nType, cx, cy);
+    m_RedrawFlags.SetAll(true);
 
     m_nCellSize = 64;
     m_nCoordFieldWidth = 30;

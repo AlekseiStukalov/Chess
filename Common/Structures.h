@@ -68,8 +68,6 @@ enum ThreatToKing
 
 
 
-
-
 struct StepResult
 {
     StepResult()
@@ -97,6 +95,13 @@ struct CellPos
 {
     CellPos() : Number(0), LiterNumber(0) {}
     CellPos(int number, int literNumber) : Number(number), LiterNumber(literNumber) {}
+    CellPos(const CellPos &obj) { operator=(obj); }
+    CellPos& operator=(const CellPos &obj)
+    {
+        Number = obj.Number;
+        LiterNumber = obj.LiterNumber;
+        return *this;
+    }
 
     bool operator==(const CellPos &obj)
     {
@@ -112,14 +117,30 @@ struct CellPos
 
 struct StepsPossibility
 {
+    StepsPossibility() {};
     StepsPossibility& operator+= (StepsPossibility &obj)
     {
-        AddNewPositions(this->CanKill, obj.CanKill);
-        AddNewPositions(this->CanStep, obj.CanStep);
-        AddNewPositions(this->CanProtect, obj.CanProtect);
-        AddNewPositions(this->AdditionalCells, obj.AdditionalCells);
+        AddNewPositions(CanKill, obj.CanKill);
+        AddNewPositions(CanStep, obj.CanStep);
+        AddNewPositions(CanProtect, obj.CanProtect);
+        AddNewPositions(AdditionalCells, obj.AdditionalCells);
 
         return *this;
+    }
+
+    bool Empty()
+    {
+        return (
+            CanKill.empty() && CanStep.empty() &&
+            CanProtect.empty() && AdditionalCells.empty());
+    }
+
+    void Clear()
+    {
+        CanKill.clear();
+        CanStep.clear();
+        CanProtect.clear();
+        AdditionalCells.clear();
     }
 
     bool IsPosExists(std::vector<CellPos> &arr, CellPos newPos)
