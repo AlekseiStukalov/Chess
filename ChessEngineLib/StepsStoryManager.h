@@ -25,7 +25,7 @@ public:
     ~StepsStoryManager();
 
     void Initialize(DeckEngine *pDeck);
-    std::list<StepStoryRecord> GetStory();
+    std::list<StepStoryRecord*> GetStory();
 
     void AddStep(StepResult &result, std::string &sOldPos, std::string &sNewPos, Deck &deck);
     void UpdateLastStepAfterPawnRespawn(ChessmanValue respawnChessmanValue);
@@ -35,7 +35,7 @@ public:
     StepStoryRecord* GetStepN(size_t stepNumber);
 
 private:
-    std::list<StepStoryRecord> m_Steps;
+    std::list<StepStoryRecord*> m_Steps;
     DeckEngine *m_pDeckEngine;
     size_t m_nKilledChessmen;
 };

@@ -25,7 +25,4 @@ public:
     std::vector<std::vector<DeckCell>> ChessDeck;     /// [number][literNumber]
     std::vector<std::pair<ChessColor, Chessman*>> KilledChessmen;
     size_t m_nStepNumber;
-
-private:
-    bool bInitialized;
 };

@@ -19,15 +19,12 @@ Deck::~Deck()
 Deck::Deck()
 {
     m_nStepNumber = 0;
-    bInitialized = false;
 }
 
 Deck& Deck::operator=(const Deck& deckSrc)
 {
-    bInitialized = deckSrc.bInitialized;
-    m_nStepNumber = deckSrc.m_nStepNumber;
-
     Create();
+    m_nStepNumber = deckSrc.m_nStepNumber;
 
     for (size_t n = 0; n < deckSrc.ChessDeck.size(); n++)
     {
@@ -43,10 +40,7 @@ Deck& Deck::operator=(const Deck& deckSrc)
                 pChessman->SetChessmanColor(pSrcChessman->GetChessmanColor());
                 pChessman->SetChessmanValue(pSrcChessman->GetChessmanValue());
                 pChessman->SetCurrentCell(&ChessDeck[n][ln]);
-
-                size_t stepNumber = pSrcChessman->GetChessmanStepNumber();
-                for (size_t i = 0; i < stepNumber; i++)
-                    pChessman->IncChessmanStepNumber();
+                pChessman->SetChessmanStepNumber(pSrcChessman->GetChessmanStepNumber());
 
                 ChessDeck[n][ln].SetChessman(pChessman);
             }
@@ -60,10 +54,7 @@ Deck& Deck::operator=(const Deck& deckSrc)
         pChessman->SetChessmanLastUsed(pSrcChessman->GetChessmanlastUsedStepNumber());
         pChessman->SetChessmanColor(pSrcChessman->GetChessmanColor());
         pChessman->SetChessmanValue(pSrcChessman->GetChessmanValue());
-
-        size_t stepNumber = pSrcChessman->GetChessmanStepNumber();
-        for (size_t i = 0; i < stepNumber; i++)
-            pChessman->IncChessmanStepNumber();
+        pChessman->SetChessmanStepNumber(pSrcChessman->GetChessmanStepNumber());
 
         KilledChessmen.emplace_back(std::make_pair(deckSrc.KilledChessmen[i].first, pChessman));
     }
@@ -73,25 +64,10 @@ Deck& Deck::operator=(const Deck& deckSrc)
 
 Deck& Deck::operator=(Deck&& deckSrc)
 {
-    bInitialized = deckSrc.bInitialized;
     m_nStepNumber = deckSrc.m_nStepNumber;
 
-    Create();
-
     for (size_t n = 0; n < deckSrc.ChessDeck.size(); n++)
-    {
-        for (size_t ln = 0; ln < deckSrc.ChessDeck[n].size(); ln++)
-        {
-            DeckCell *pCell = &deckSrc.ChessDeck[n][ln];
-            Chessman *pSrcChessman = (Chessman *)pCell->GetChessman();
-
-            if (pSrcChessman)
-            {
-                pCell->SetChessman(nullptr);
-                ChessDeck[n][ln].SetChessman(pSrcChessman);
-            }
-        }
-    }
+        ChessDeck.push_back(std::move(deckSrc.ChessDeck[n]));
 
     for (size_t i = 0; i < deckSrc.KilledChessmen.size(); i++)
     {
@@ -115,10 +91,8 @@ void Deck::Create()
             cell.SetCellColor(EngineHelper::Instance().GetCellColor(i, j));
             cell.SetCellInfo(EngineHelper::Instance().GetCellName(i, j));
 
-            cellRow.push_back(cell);
+            cellRow.push_back(std::move(cell));
         }
-        ChessDeck.push_back(cellRow);
+        ChessDeck.push_back(std::move(cellRow));
     }
-
-    bInitialized = true;
 }

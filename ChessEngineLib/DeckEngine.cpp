@@ -70,6 +70,8 @@ StepResult DeckEngine::MakeStep(ChessColor playerColor, std::string &sOldPos, st
     {
         result = DoMakeStep(pOldCell, pNewCell, steps.AdditionalCells);
 
+
+        Deck *pDeck = nullptr;
         m_StoryManager.AddStep(result, sOldPos, sNewPos, GetDeckCopy());
     }
     else
@@ -1067,7 +1069,6 @@ bool DeckEngine::MoveFigure(DeckCell *pOldCell, DeckCell *pNewCell)
         pOldCell->SetChessman(nullptr);
         pNewCell->SetChessman(pChessman);
         pChessman->SetCurrentCell(pNewCell);
-        pChessman->IncChessmanStepNumber();
         return true;
     }
 

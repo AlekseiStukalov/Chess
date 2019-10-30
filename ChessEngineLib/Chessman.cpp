@@ -14,7 +14,6 @@ Chessman::Chessman(ChessColor nChessmanColor, ChessmanValue nChessmanValue)
     m_nChessmanStepNumber = 0;
 }
 
-
 Chessman::~Chessman()
 {
     m_pCurrentCell = nullptr;
@@ -58,6 +57,11 @@ size_t Chessman::GetChessmanStepNumber() const
 void Chessman::IncChessmanStepNumber()
 {
     m_nChessmanStepNumber++;
+}
+
+void Chessman::SetChessmanStepNumber(size_t stepNumber)
+{
+    m_nChessmanStepNumber = stepNumber;
 }
 
 size_t Chessman::GetChessmanlastUsedStepNumber() const

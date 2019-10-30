@@ -11,6 +11,12 @@ public:
     DeckCell();
     ~DeckCell();
 
+    DeckCell(const DeckCell &obj) = delete;
+    DeckCell& operator=(const DeckCell &obj) = delete;
+
+    DeckCell(const DeckCell &&obj) { operator=(std::move(obj)); };
+    DeckCell& operator=(const DeckCell &&obj);
+
     virtual ChessColor GetCellColor() const;
     virtual IChessman* GetChessman() const;
     virtual std::string GetCellName() const;

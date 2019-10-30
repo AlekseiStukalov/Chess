@@ -7,6 +7,16 @@ DeckCell::DeckCell()
     m_pChessman = nullptr;
 }
 
+DeckCell& DeckCell::operator=(const DeckCell &&obj)
+{
+    m_nCellColor = obj.m_nCellColor;
+    m_sCellName = std::move(obj.m_sCellName);
+    m_CellPos = obj.m_CellPos;
+    m_pChessman = obj.m_pChessman;
+
+    return *this;
+}
+
 DeckCell::~DeckCell()
 {
     if (m_pChessman)

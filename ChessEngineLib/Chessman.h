@@ -14,6 +14,9 @@ public:
     Chessman(ChessColor nChessmanColor, ChessmanValue nChessmanValue);
     ~Chessman();
 
+    Chessman(const Chessman &obj) = delete;
+    Chessman& operator=(const Chessman &obj) = delete;
+
     virtual IDeckCell* GetCurrentCell() const;
     virtual ChessColor GetChessmanColor() const;
     virtual ChessmanValue GetChessmanValue() const;
@@ -25,6 +28,7 @@ public:
     size_t GetChessmanlastUsedStepNumber() const;
 
     void IncChessmanStepNumber();
+    void SetChessmanStepNumber(size_t stepNumber);
     void SetChessmanLastUsed(size_t lastUsed);
 
 protected:
