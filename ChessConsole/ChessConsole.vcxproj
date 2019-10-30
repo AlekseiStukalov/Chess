@@ -143,9 +143,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\Common\APIClasses.h" />
     <ClInclude Include="..\Common\Defines.h" />
     <ClInclude Include="..\Common\Includes.h" />

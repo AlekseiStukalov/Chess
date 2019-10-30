@@ -182,9 +182,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\Common\StringList.cpp" />
     <ClCompile Include="ChessEngineLib.cpp" />
     <ClCompile Include="Chessman.cpp" />
