@@ -70,8 +70,6 @@ StepResult DeckEngine::MakeStep(ChessColor playerColor, std::string &sOldPos, st
     {
         result = DoMakeStep(pOldCell, pNewCell, steps.AdditionalCells);
 
-
-        Deck *pDeck = nullptr;
         m_StoryManager.AddStep(result, sOldPos, sNewPos, GetDeckCopy());
     }
     else
@@ -881,8 +879,8 @@ ThreatToKing DeckEngine::GetThreatToKing(AllSteps &rivalSteps, AllSteps &friendS
 
 void DeckEngine::GetGameState(StepResult &result)
 {
-    AllSteps whiteSteps = GetAllPossibleSteps(CHESS_COLOR_BLACK);
-    AllSteps blackSteps = GetAllPossibleSteps(CHESS_COLOR_WHITE);
+    AllSteps whiteSteps = GetAllPossibleSteps(CHESS_COLOR_WHITE);
+    AllSteps blackSteps = GetAllPossibleSteps(CHESS_COLOR_BLACK);
 
     result.threatToWhiteKing = GetThreatToKing(blackSteps, whiteSteps, CHESS_COLOR_WHITE);
     result.threatToBlackKing = GetThreatToKing(whiteSteps, blackSteps, CHESS_COLOR_BLACK);

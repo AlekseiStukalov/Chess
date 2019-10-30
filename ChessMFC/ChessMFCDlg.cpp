@@ -199,6 +199,7 @@ void CChessMFCDlg::DrawMarks(CDC* pDC)
     DrawMark(pDC, m_StepsPossibility.CanStep, RGB(0, 255, 0));
     DrawMark(pDC, m_StepsPossibility.CanKill, RGB(255, 0, 0));
     DrawMark(pDC, m_StepsPossibility.CanProtect, RGB(0, 0, 255));
+    DrawMark(pDC, m_StepsPossibility.AdditionalCells, RGB(255, 0, 255));
 }
 
 void CChessMFCDlg::DrawMark(CDC* pDC, std::vector<CellPos>& positions, COLORREF color)
