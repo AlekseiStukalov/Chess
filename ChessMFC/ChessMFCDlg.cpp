@@ -21,6 +21,7 @@ CChessMFCDlg::CChessMFCDlg(CWnd* pParent /*=NULL*/)
 {
     m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
     m_pDeckEngine = nullptr;
+    m_CurrentPlayerColor = CHESS_COLOR_WHITE;
 
     //default
     m_nCellSize = 64;
@@ -187,25 +188,29 @@ void CChessMFCDlg::DrawChessmen(CDC* pDC, ChessColor currentPlayerColor)
 
 void CChessMFCDlg::DrawMarks(CDC* pDC, ChessColor currentPlayerColor)
 {
-    DrawMarksPart(pDC, currentPlayerColor, m_StepsPossibility.CanStep, CPen(PS_SOLID, 4, RGB(0, 255, 0)));
-    DrawMarksPart(pDC, currentPlayerColor, m_StepsPossibility.CanKill, CPen(PS_SOLID, 4, RGB(255, 0, 0)));
-    DrawMarksPart(pDC, currentPlayerColor, m_StepsPossibility.CanProtect, CPen(PS_SOLID, 4, RGB(0, 0, 255)));
+    DrawMark(pDC, currentPlayerColor, m_StepsPossibility.CanStep, RGB(0, 255, 0));
+    DrawMark(pDC, currentPlayerColor, m_StepsPossibility.CanKill, RGB(255, 0, 0));
+    DrawMark(pDC, currentPlayerColor, m_StepsPossibility.CanProtect, RGB(0, 0, 255));
 }
 
-void CChessMFCDlg::DrawMarksPart(CDC* pDC, ChessColor currentPlayerColor, std::vector<CellPos>& positions, CPen &pen)
+void CChessMFCDlg::DrawMark(CDC* pDC, ChessColor currentPlayerColor, std::vector<CellPos>& positions, COLORREF color)
 {
+    CPen pen(PS_SOLID, 0, color);
     CPen *pOldPen = pDC->SelectObject(&pen);
+    CBrush brush(color);
+    CBrush *pOldBrush = pDC->SelectObject(&brush);
     for (size_t i = 0; i < positions.size(); i++)
     {
-        CRect rc = GetRectByCellPos(positions[i]);
-        rc.InflateRect(-2, -2);
+        CRect outerRc = GetRectByCellPos(positions[i]);
+        CRect innerRc(outerRc);
+        innerRc.InflateRect(-4, -4);
 
-        pDC->MoveTo(rc.left, rc.top);
-        pDC->LineTo(rc.right, rc.top);
-        pDC->LineTo(rc.right, rc.bottom);
-        pDC->LineTo(rc.left, rc.bottom);
-        pDC->LineTo(rc.left, rc.top);
+        pDC->Rectangle(outerRc.left, outerRc.top, outerRc.right, innerRc.top); //top
+        pDC->Rectangle(outerRc.left, innerRc.bottom, outerRc.right, outerRc.bottom); //bottom
+        pDC->Rectangle(innerRc.right, innerRc.top, outerRc.right, innerRc.bottom); //right
+        pDC->Rectangle(outerRc.left, innerRc.top, innerRc.left, innerRc.bottom); //left
     }
+    pDC->SelectObject(pOldBrush);
     pDC->SelectObject(pOldPen);
 }
 
@@ -286,18 +291,6 @@ void CChessMFCDlg::OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI)
     lpMMI->ptMinTrackSize.y = 630;
 
     //570x577 wtf??
-}
-
-HRESULT CChessMFCDlg::OnButtonOK(IHTMLElement* /*pElement*/)
-{
-    OnOK();
-    return S_OK;
-}
-
-HRESULT CChessMFCDlg::OnButtonCancel(IHTMLElement* /*pElement*/)
-{
-    OnCancel();
-    return S_OK;
 }
 
 void CChessMFCDlg::DrawChessman(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect)
@@ -480,24 +473,40 @@ void CChessMFCDlg::OnLButtonDown(UINT nFlags, CPoint point)
         cellPos.Number = 8 - (int)(pos.y / m_nCellSize);
         cellPos.LiterNumber = (pos.x / m_nCellSize) + 1;
 
+        bool wasStep = false;
+
         if (m_StepsPossibility.Empty())
             m_RedrawFlags.bRedrawMarks = true;
         else
         {
+            StepResult res;
+
             m_RedrawFlags.SetAll(true);
 
             IDeckCell* pCurrCell = m_pDeckEngine->GetCell(m_SelectedCell);
             IDeckCell* pNewCell = m_pDeckEngine->GetCell(cellPos);
             if (pNewCell && pCurrCell)
             {
-                StepResult res = m_pDeckEngine->MakeStep(m_CurrentPlayerColor, pCurrCell->GetCellName(), pNewCell->GetCellName());
-
+                if (m_StepsPossibility.IsPosExists(m_StepsPossibility.CanKill, cellPos) ||
+                    m_StepsPossibility.IsPosExists(m_StepsPossibility.CanStep, cellPos))
+                {
+                    m_pDeckEngine->MakeStep(m_CurrentPlayerColor, pCurrCell->GetCellName(), pNewCell->GetCellName());
+                    wasStep = true;
+                }
             }
-
         }
 
-        m_StepsPossibility = m_pDeckEngine->GetPossibleSteps(cellPos);
-        m_SelectedCell = cellPos;
+        if (wasStep)
+        {
+            m_StepsPossibility.Clear();
+            m_SelectedCell.LiterNumber = 0;
+            m_SelectedCell.Number = 0;
+        }
+        else
+        {
+            m_StepsPossibility = m_pDeckEngine->GetPossibleSteps(cellPos);
+            m_SelectedCell = cellPos;
+        }
     }
     else
     {

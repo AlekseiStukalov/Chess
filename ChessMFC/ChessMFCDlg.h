@@ -30,10 +30,7 @@ protected:
     void DrawDesk(CDC* pDC, ChessColor currentPlayerColor);
     void DrawChessmen(CDC* pDC, ChessColor currentPlayerColor);
     void DrawMarks(CDC* pDC, ChessColor currentPlayerColor);
-    void DrawMarksPart(CDC* pDC, ChessColor currentPlayerColor, std::vector<CellPos>& positions, CPen &pen);
-
-    HRESULT OnButtonOK(IHTMLElement *pElement);
-    HRESULT OnButtonCancel(IHTMLElement *pElement);
+    void DrawMark(CDC* pDC, ChessColor currentPlayerColor, std::vector<CellPos>& positions, COLORREF color);
 
 protected:
     void DrawChessman(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect);

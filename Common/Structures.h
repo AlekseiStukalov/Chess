@@ -78,6 +78,18 @@ struct StepResult
         threatToWhiteKing = None;
         threatToBlackKing = None;
     }
+    StepResult(const StepResult &obj) { operator=(obj); }
+    StepResult& operator= (const StepResult &obj)
+    {
+        threatToBlackKing = obj.threatToBlackKing;
+        threatToWhiteKing = obj.threatToWhiteKing;
+        respawnCellName = obj.respawnCellName;
+        gameState = obj.gameState;
+        nError = obj.nError;
+        nNextPlayerColor = obj.nNextPlayerColor;
+        bSpecialStep = obj.bSpecialStep;
+        return *this;
+    }
 
     ThreatToKing threatToWhiteKing;
     ThreatToKing threatToBlackKing;
