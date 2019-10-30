@@ -286,13 +286,20 @@ HCURSOR CChessMFCDlg::OnQueryDragIcon()
 void CChessMFCDlg::OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI)
 {
     CDialog::OnGetMinMaxInfo(lpMMI);
-    lpMMI->ptMinTrackSize.x = m_StartPoint.x + 2 * m_nCoordFieldWidth + 8 * m_nCellSize;
-    lpMMI->ptMinTrackSize.y = m_StartPoint.y + 2 * m_nCoordFieldWidth + 8 * m_nCellSize;
 
-    lpMMI->ptMinTrackSize.x = 590;
-    lpMMI->ptMinTrackSize.y = 630;
+    CRect rcC, rcW;
+    GetWindowRect(&rcW);
+    GetClientRect(&rcC);
+    rcW.DeflateRect(rcC);
 
-    //570x577 wtf??
+    lpMMI->ptMinTrackSize.x = rcW.Width();
+    lpMMI->ptMinTrackSize.y = rcW.Height();
+
+    lpMMI->ptMinTrackSize.x += m_StartPoint.x * 2;
+    lpMMI->ptMinTrackSize.y += m_StartPoint.y * 2;
+
+    lpMMI->ptMinTrackSize.x += 2 * m_nCoordFieldWidth + 8 * m_nCellSize;
+    lpMMI->ptMinTrackSize.y += 2 * m_nCoordFieldWidth + 8 * m_nCellSize;
 }
 
 void CChessMFCDlg::DrawChessman(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect)
