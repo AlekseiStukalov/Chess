@@ -25,12 +25,12 @@ protected:
     virtual void DoDataExchange(CDataExchange* pDX);
     virtual BOOL OnInitDialog();
 
-    void DrawCoordinates(CDC* pDC, ChessColor currentPlayerColor);
-    void DrawRawDesk(CDC* pDC, ChessColor currentPlayerColor);
-    void DrawDesk(CDC* pDC, ChessColor currentPlayerColor);
-    void DrawChessmen(CDC* pDC, ChessColor currentPlayerColor);
-    void DrawMarks(CDC* pDC, ChessColor currentPlayerColor);
-    void DrawMark(CDC* pDC, ChessColor currentPlayerColor, std::vector<CellPos>& positions, COLORREF color);
+    void DrawCoordinates(CDC* pDC);
+    void DrawRawDesk(CDC* pDC);
+    void DrawDesk(CDC* pDC);
+    void DrawChessmen(CDC* pDC);
+    void DrawMarks(CDC* pDC);
+    void DrawMark(CDC* pDC, std::vector<CellPos>& positions, COLORREF color);
 
 protected:
     void DrawChessman(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect);
