@@ -84,7 +84,7 @@ void CChessMFCDlg::DrawCoordinates(CDC* pDC)
     int bBottom = bTop + m_nCoordFieldWidth;
     for (int literNumber = 0; literNumber < 8; literNumber++)
     {
-        wchar_t c = L'a' + literNumber;
+        wchar_t c = (m_CurrentPlayerColor == CHESS_COLOR_WHITE ? (L'a' + literNumber) :(L'h' - literNumber));
         CString str(c);
 
         int left = deckStartPosX + literNumber*m_nCellSize;
@@ -138,10 +138,7 @@ void CChessMFCDlg::DrawRawDesk(CDC* pDC)
             int left = deckStartPosX + literNumber*m_nCellSize;
             int right = left + m_nCellSize;
 
-            int topPosAbs = number*m_nCellSize;
-            topPosAbs = (m_CurrentPlayerColor == CHESS_COLOR_WHITE ? m_nCellSize * 7 - topPosAbs : topPosAbs);
-
-            int top = deckStartPosY + topPosAbs;
+            int top = deckStartPosY + m_nCellSize * 7 - number*m_nCellSize;
             int bottom = top + m_nCellSize;
 
             CRect rc(left, top, right, bottom);
@@ -178,13 +175,16 @@ void CChessMFCDlg::DrawChessmen(CDC* pDC)
 
             if (pChessman)
             {
-                int left = deckStartPosX + literNumber*m_nCellSize;
+                int horPosAbs = literNumber*m_nCellSize;
+                horPosAbs = (m_CurrentPlayerColor == CHESS_COLOR_WHITE ? horPosAbs : m_nCellSize * 7 - horPosAbs);
+
+                int left = deckStartPosX + horPosAbs;
                 int right = left + m_nCellSize;
 
-                int topPosAbs = number*m_nCellSize;
-                topPosAbs = (m_CurrentPlayerColor == CHESS_COLOR_WHITE ? m_nCellSize * 7 - topPosAbs : topPosAbs);
+                int vertPosAbs = number*m_nCellSize;
+                vertPosAbs = (m_CurrentPlayerColor == CHESS_COLOR_WHITE ? m_nCellSize * 7 - vertPosAbs : vertPosAbs);
 
-                int top = deckStartPosY + topPosAbs;
+                int top = deckStartPosY + vertPosAbs;
                 int bottom = top + m_nCellSize;
 
                 CRect rc(left, top, right, bottom);
@@ -348,14 +348,16 @@ CRect CChessMFCDlg::GetRectByCellPos(CellPos &pos)
     int deckStartPosX = m_StartPoint.x + m_nCoordFieldWidth;
     int deckStartPosY = m_StartPoint.y + m_nCoordFieldWidth;
 
+    int horPosAbs = (pos.LiterNumber - 1)*m_nCellSize;
+    horPosAbs = (m_CurrentPlayerColor == CHESS_COLOR_WHITE ? horPosAbs : m_nCellSize * 7 - horPosAbs);
+
+    int vertPosAbs = (pos.Number - 1)*m_nCellSize;
+    vertPosAbs = (m_CurrentPlayerColor == CHESS_COLOR_WHITE ? m_nCellSize * 7 - vertPosAbs : vertPosAbs);
+
     CRect rect;
-    rect.left = deckStartPosX + (pos.LiterNumber - 1)*m_nCellSize;
+    rect.left = deckStartPosX + horPosAbs;
     rect.right = rect.left + m_nCellSize;
-
-    int topPosAbs = (pos.Number - 1)*m_nCellSize;
-    topPosAbs = (m_CurrentPlayerColor == CHESS_COLOR_WHITE ? m_nCellSize * 7 - topPosAbs : topPosAbs);
-
-    rect.top = deckStartPosY + topPosAbs;
+    rect.top = deckStartPosY + vertPosAbs;
     rect.bottom = rect.top + m_nCellSize;
 
     return rect;
@@ -482,12 +484,16 @@ void CChessMFCDlg::OnLButtonDown(UINT nFlags, CPoint point)
     if (pos.x >= 0 && pos.y >= 0 && pos.x < deckWidth && pos.y < deckWidth)
     {
         CellPos cellPos;
-        cellPos.LiterNumber = (pos.x / m_nCellSize) + 1;
-
-        if(m_CurrentPlayerColor == CHESS_COLOR_WHITE)
+        if (m_CurrentPlayerColor == CHESS_COLOR_WHITE)
+        {
+            cellPos.LiterNumber = (pos.x / m_nCellSize) + 1;
             cellPos.Number = 8 - (int)(pos.y / m_nCellSize);
+        }
         else
+        {
+            cellPos.LiterNumber = 8 - (pos.x / m_nCellSize);
             cellPos.Number = (int)(pos.y / m_nCellSize) + 1;
+        }
 
         bool wasStep = false;
 
