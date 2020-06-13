@@ -1,16 +1,10 @@
 #pragma once
 #include "../Common/Structures.h"
 #include "../Common/APIClasses.h"
+#include "DeckDialog.h"
 
 class IDeckEngine;
 
-struct RedrawFlags
-{
-    void SetAll(bool bValue);
-
-    bool bRedrawDesk;
-    bool bRedrawMarks;
-};
 
 class CChessMFCDlg : public CDialog
 {
@@ -25,22 +19,9 @@ protected:
     virtual void DoDataExchange(CDataExchange* pDX);
     virtual BOOL OnInitDialog();
 
-    void DrawCoordinates(CDC* pDC);
-    void DrawRawDesk(CDC* pDC);
-    void DrawDesk(CDC* pDC);
-    void DrawChessmen(CDC* pDC);
-    void DrawMarks(CDC* pDC);
-    void DrawMark(CDC* pDC, std::vector<CellPos>& positions, COLORREF color);
-
 protected:
-    void DrawChessman(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect);
-    int GetBmChessmanNumber(ChessmanValue value, ChessColor color);
-    CRect GetRectByCellPos(CellPos &pos);
 
-    void DrawChessman__Resizeable(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect);
-    int GetBmChessmanOffset(ChessmanValue value, ChessColor color);
 
-    afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
     afx_msg void OnSize(UINT nType, int cx, int cy);
     afx_msg BOOL OnEraseBkgnd(CDC* pDC);
     afx_msg void OnPaint();
@@ -50,17 +31,13 @@ protected:
     DECLARE_MESSAGE_MAP()
 
 private:
+    CDeckDialog m_DeckDlg;
     HICON m_hIcon;
-    CBitmap m_bmChessmen;
-    CImageList m_ilChessmen;
-    RedrawFlags m_RedrawFlags;
+
 
     CPoint m_StartPoint;
-    int m_nCellSize;
-    int m_nCoordFieldWidth;
     CellPos m_SelectedCell;
 
     IDeckEngine *m_pDeckEngine;
-    StepsPossibility m_StepsPossibility;
     ChessColor m_CurrentPlayerColor;
 };
