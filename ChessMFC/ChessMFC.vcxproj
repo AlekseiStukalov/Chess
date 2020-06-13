@@ -187,6 +187,7 @@
     <ClInclude Include="..\Common\Defines.h" />
     <ClInclude Include="..\Common\Includes.h" />
     <ClInclude Include="..\Common\Structures.h" />
+    <ClInclude Include="ChessMenu.h" />
     <ClInclude Include="ChessMFC.h" />
     <ClInclude Include="ChessMFCDlg.h" />
     <ClInclude Include="DeckDialog.h" />
@@ -195,6 +196,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ChessMenu.cpp" />
     <ClCompile Include="ChessMFC.cpp" />
     <ClCompile Include="ChessMFCDlg.cpp" />
     <ClCompile Include="DeckDialog.cpp" />

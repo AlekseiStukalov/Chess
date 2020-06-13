@@ -23,7 +23,13 @@ CChessMFCDlg::CChessMFCDlg(CWnd* pParent /*=NULL*/)
     m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
     m_pDeckEngine = nullptr;
     m_CurrentPlayerColor = CHESS_COLOR_WHITE;
+    m_nActiveDlg = IDD_CHESS_MENU;
+}
 
+void CChessMFCDlg::SetNewDlg(int dialogId)
+{
+    m_nActiveDlg = dialogId;
+    UpdateLayout();
 }
 
 void CChessMFCDlg::DoDataExchange(CDataExchange* pDX)
@@ -50,8 +56,11 @@ BOOL CChessMFCDlg::OnInitDialog()
 
     m_DeckDlg.SetEngine(m_pDeckEngine);
     m_DeckDlg.Create(IDD_DECK, this);
+    m_MenuDlg.Create(IDD_CHESS_MENU, this);
 
-    m_StartPoint.x = m_StartPoint.y = 0;
+    m_StartPoint.x = m_StartPoint.y = 10;
+
+    UpdateLayout();
 
     return TRUE;
 }
@@ -104,19 +113,62 @@ void CChessMFCDlg::OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI)
     lpMMI->ptMinTrackSize.x = rcW.Width();
     lpMMI->ptMinTrackSize.y = rcW.Height();
 
-    lpMMI->ptMinTrackSize.x += m_StartPoint.x * 2;
-    lpMMI->ptMinTrackSize.y += m_StartPoint.y * 2;
+    switch (m_nActiveDlg)
+    {
+        case IDD_CHESS_MENU:
+        {
+            lpMMI->ptMinTrackSize.x += 440;
+            lpMMI->ptMinTrackSize.y += 250;
+            break;
+        }
+        case IDD_DECK:
+        {
+            lpMMI->ptMinTrackSize.x += m_StartPoint.x * 2;
+            lpMMI->ptMinTrackSize.y += m_StartPoint.y * 2;
 
-    if (m_DeckDlg.GetSafeHwnd())
-    {
-        CSize size = m_DeckDlg.GetRequiredSize();
-        lpMMI->ptMinTrackSize.x += size.cx;
-        lpMMI->ptMinTrackSize.y += size.cy;
+            if (m_DeckDlg.GetSafeHwnd())
+            {
+                CSize size = m_DeckDlg.GetRequiredSize();
+                lpMMI->ptMinTrackSize.x += size.cx;
+                lpMMI->ptMinTrackSize.y += size.cy;
+            }
+            else
+            {
+                lpMMI->ptMinTrackSize.x += DEFAULT_DECK_SIZE;
+                lpMMI->ptMinTrackSize.y += DEFAULT_DECK_SIZE;
+            }
+            break;
+        }
+        default:
+            break;
     }
-    else
+}
+
+void CChessMFCDlg::UpdateLayout()
+{
+    CRect wndRect;
+    GetWindowRect(&wndRect);
+
+    switch (m_nActiveDlg)
     {
-        lpMMI->ptMinTrackSize.x += DEFAULT_DECK_SIZE;
-        lpMMI->ptMinTrackSize.y += DEFAULT_DECK_SIZE;
+        case IDD_CHESS_MENU:
+        {
+            m_MenuDlg.ShowWindow(SW_SHOW);
+            m_DeckDlg.ShowWindow(SW_HIDE);
+
+            MoveWindow(CRect(wndRect.left, wndRect.top, 100, 100));
+            break;
+        }
+        case IDD_DECK:
+        {
+            m_MenuDlg.ShowWindow(SW_HIDE);
+            m_DeckDlg.ShowWindow(SW_SHOW);
+
+            MoveWindow(CRect(wndRect.left, wndRect.top, 100, 100));
+            break;
+        }
+        default:
+            break;
     }
 }
 
@@ -124,9 +176,28 @@ void CChessMFCDlg::OnSize(UINT nType, int cx, int cy)
 {
     CDialog::OnSize(nType, cx, cy);
 
-    if (m_DeckDlg.GetSafeHwnd())
+    switch (m_nActiveDlg)
     {
-        CSize size = m_DeckDlg.GetRequiredSize();
-        m_DeckDlg.MoveWindow(m_StartPoint.x, m_StartPoint.y, size.cx, size.cy);
+        case IDD_CHESS_MENU:
+        {
+            if (m_MenuDlg.GetSafeHwnd())
+            {
+                CRect rc;
+                GetClientRect(&rc);
+                m_MenuDlg.MoveWindow(0, 0, rc.Width(), rc.Height());
+            }
+            break;
+        }
+        case IDD_DECK:
+        {
+            if (m_DeckDlg.GetSafeHwnd())
+            {
+                CSize size = m_DeckDlg.GetRequiredSize();
+                m_DeckDlg.MoveWindow(m_StartPoint.x, m_StartPoint.y, size.cx, size.cy);
+            }
+            break;
+        }
+        default:
+            break;
     }
 }
