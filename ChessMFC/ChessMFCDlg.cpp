@@ -57,6 +57,7 @@ BOOL CChessMFCDlg::OnInitDialog()
     m_DeckDlg.SetEngine(m_pDeckEngine);
     m_DeckDlg.Create(IDD_DECK, this);
     m_MenuDlg.Create(IDD_CHESS_MENU, this);
+    m_SolveProblemDlg.Create(IDD_SOLVE_PROBLEM, this);
 
     m_StartPoint.x = m_StartPoint.y = 10;
 
@@ -139,6 +140,13 @@ void CChessMFCDlg::OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI)
             }
             break;
         }
+        case IDD_SOLVE_PROBLEM:
+        {
+            //?
+            lpMMI->ptMinTrackSize.x += 440;
+            lpMMI->ptMinTrackSize.y += 250;
+            break;
+        }
         default:
             break;
     }
@@ -155,6 +163,7 @@ void CChessMFCDlg::UpdateLayout()
         {
             m_MenuDlg.ShowWindow(SW_SHOW);
             m_DeckDlg.ShowWindow(SW_HIDE);
+            m_SolveProblemDlg.ShowWindow(SW_HIDE);
 
             MoveWindow(CRect(wndRect.left, wndRect.top, 100, 100));
             break;
@@ -163,7 +172,16 @@ void CChessMFCDlg::UpdateLayout()
         {
             m_MenuDlg.ShowWindow(SW_HIDE);
             m_DeckDlg.ShowWindow(SW_SHOW);
+            m_SolveProblemDlg.ShowWindow(SW_HIDE);
 
+            MoveWindow(CRect(wndRect.left, wndRect.top, 100, 100));
+            break;
+        }
+        case IDD_SOLVE_PROBLEM:
+        {
+            m_MenuDlg.ShowWindow(SW_HIDE);
+            m_DeckDlg.ShowWindow(SW_HIDE);
+            m_SolveProblemDlg.ShowWindow(SW_SHOW);
             MoveWindow(CRect(wndRect.left, wndRect.top, 100, 100));
             break;
         }
@@ -194,6 +212,15 @@ void CChessMFCDlg::OnSize(UINT nType, int cx, int cy)
             {
                 CSize size = m_DeckDlg.GetRequiredSize();
                 m_DeckDlg.MoveWindow(m_StartPoint.x, m_StartPoint.y, size.cx, size.cy);
+            }
+            break;
+        }
+        case IDD_SOLVE_PROBLEM:
+        {
+            if (m_SolveProblemDlg.GetSafeHwnd())
+            {
+                //CSize size = m_DeckDlg.GetRequiredSize();
+                //m_SolveProblemDlg.MoveWindow(m_StartPoint.x, m_StartPoint.y, size.cx, size.cy);
             }
             break;
         }

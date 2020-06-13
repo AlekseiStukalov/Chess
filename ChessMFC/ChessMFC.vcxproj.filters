@@ -48,7 +48,10 @@
     <ClInclude Include="DeckDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ChessMenu.h">
+    <ClInclude Include="SolveProblemDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChessMenuDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -65,7 +68,10 @@
     <ClCompile Include="DeckDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ChessMenu.cpp">
+    <ClCompile Include="SolveProblemDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChessMenuDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

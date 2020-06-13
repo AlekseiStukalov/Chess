@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ChessMFC.h"
-#include "ChessMenu.h"
+#include "ChessMenuDlg.h"
 #include "afxdialogex.h"
 #include "ChessMFCDlg.h"
 
@@ -33,6 +33,6 @@ void CChessMenu::OnStart2Players()
 
 void CChessMenu::OnStartProblemSolving()
 {
-    ((CChessMFCDlg*)GetParent())->SetNewDlg(IDD_CHESS_MENU);
+    ((CChessMFCDlg*)GetParent())->SetNewDlg(IDD_SOLVE_PROBLEM);
 }
 

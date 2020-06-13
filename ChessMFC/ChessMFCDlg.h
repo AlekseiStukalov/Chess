@@ -1,8 +1,9 @@
 #pragma once
 #include "../Common/Structures.h"
 #include "../Common/APIClasses.h"
-#include "ChessMenu.h"
+#include "ChessMenuDlg.h"
 #include "DeckDialog.h"
+#include "SolveProblemDlg.h"
 
 class IDeckEngine;
 
@@ -35,6 +36,7 @@ private:
     int m_nActiveDlg;
     CDeckDialog m_DeckDlg;
     CChessMenu m_MenuDlg;
+    CSolveProblemDlg m_SolveProblemDlg;
 
     HICON m_hIcon;
     CPoint m_StartPoint;
