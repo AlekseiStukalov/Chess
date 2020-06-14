@@ -33,6 +33,7 @@ void ConsoleChessUI::Start()
 {
     ChessEngine engine;
     m_pDeckEngine = engine.CreateDeck();
+    m_pDeckEngine->PopulateDeckForGame();
 
     //std::cout << "while player, enter name plz: ";
     //m_WhitePlayer.m_sNickname = m_uiHelper.ReadLine();

@@ -2,7 +2,7 @@
 #include "../Common/Structures.h"
 #include "../Common/APIClasses.h"
 #include "ChessMenuDlg.h"
-#include "DeckDialog.h"
+#include "TwoPlayersDlg.h"
 #include "SolveProblemDlg.h"
 
 class IDeckEngine;
@@ -29,19 +29,23 @@ protected:
     afx_msg void OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI);
 
     void UpdateLayout();
+    CDialog* GetDlgById(int dialogId);
 
     DECLARE_MESSAGE_MAP()
 
 private:
     int m_nActiveDlg;
-    CDeckDialog m_DeckDlg;
+    std::vector<int> m_ViewIds;
+
+    CTwoPlayersDlg m_TwoPlayersDlg;
     CChessMenu m_MenuDlg;
     CSolveProblemDlg m_SolveProblemDlg;
 
     HICON m_hIcon;
     CPoint m_StartPoint;
-    CellPos m_SelectedCell;
 
     IDeckEngine *m_pDeckEngine;
+
     ChessColor m_CurrentPlayerColor;
+    CellPos m_SelectedCell;
 };

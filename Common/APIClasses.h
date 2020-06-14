@@ -43,4 +43,5 @@ public:
     virtual size_t GetStepNumber() = 0;
     virtual bool GoToPreviousStep() = 0;
     virtual bool GoToNextStep() = 0;
+    virtual void PopulateDeckForGame() = 0;
 };

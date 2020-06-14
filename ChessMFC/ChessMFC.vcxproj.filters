@@ -16,21 +16,12 @@
     <Filter Include="Common">
       <UniqueIdentifier>{7f6d7ef8-20b0-4963-a7f7-43f9e2372d69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{94146a8a-0754-435d-8b52-b05381b1423b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ChessMFC.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ChessMFCDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\APIClasses.h">
@@ -45,27 +36,33 @@
     <ClInclude Include="..\Common\Structures.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="DeckDialog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SolveProblemDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ChessMenuDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DeckDrawer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TwoPlayersDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="ChessMFC.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ChessMFC.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ChessMFCDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DeckDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SolveProblemDlg.cpp">
@@ -73,6 +70,18 @@
     </ClCompile>
     <ClCompile Include="ChessMenuDlg.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeckDrawer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TwoPlayersDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="ChessMFC.cpp">
+      <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -24,6 +24,7 @@ public:
     virtual size_t GetStepNumber();
     virtual bool GoToPreviousStep();
     virtual bool GoToNextStep();
+    virtual void PopulateDeckForGame();
 
 protected:
     StepResult DoMakeStep(DeckCell *pOldCell, DeckCell *pNewCell, std::vector<CellPos> &additionalCells);
@@ -43,7 +44,6 @@ protected:
     std::vector<CellPos> FindFigureOnDeck(ChessmanValue chessman, ChessColor playerColor);
     std::vector<CellPos> GetConnectingCells(Chessman *pExecutor, Chessman *pGoal);
 
-    void FillChessmenInitState();
     bool SetFigure(Chessman *pChessman, int number, int literNumber);
     bool SetFigure(Chessman *pChessman, int number, char liter);
 

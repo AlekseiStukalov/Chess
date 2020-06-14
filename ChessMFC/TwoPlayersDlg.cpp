@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "ChessMFC.h"
-#include "DeckDialog.h"
+#include "TwoPlayersDlg.h"
 
-IMPLEMENT_DYNAMIC(CDeckDialog, CDialog)
+IMPLEMENT_DYNAMIC(CTwoPlayersDlg, CDialog)
 
-BEGIN_MESSAGE_MAP(CDeckDialog, CDialog)
+BEGIN_MESSAGE_MAP(CTwoPlayersDlg, CDialog)
     ON_WM_LBUTTONDOWN()
     ON_WM_SIZE()
     ON_WM_ERASEBKGND()
@@ -12,7 +12,7 @@ BEGIN_MESSAGE_MAP(CDeckDialog, CDialog)
 END_MESSAGE_MAP()
 
 
-CDeckDialog::CDeckDialog(CWnd * pParent) : CDialog(IDD_DECK, pParent)
+CTwoPlayersDlg::CTwoPlayersDlg(CWnd * pParent) : CDialog(IDD_TWO_PLAYERS, pParent)
 {
     //default
     m_nCellSize = 64;
@@ -20,11 +20,11 @@ CDeckDialog::CDeckDialog(CWnd * pParent) : CDialog(IDD_DECK, pParent)
     m_nBorderWidth = 1;
 }
 
-CDeckDialog::~CDeckDialog()
+CTwoPlayersDlg::~CTwoPlayersDlg()
 {
 }
 
-void CDeckDialog::OnLButtonDown(UINT nFlags, CPoint point)
+void CTwoPlayersDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
     CDialog::OnLButtonDown(nFlags, point);
 
@@ -106,7 +106,7 @@ void CDeckDialog::OnLButtonDown(UINT nFlags, CPoint point)
     RedrawWindow();
 }
 
-void CDeckDialog::OnSize(UINT nType, int cx, int cy)
+void CTwoPlayersDlg::OnSize(UINT nType, int cx, int cy)
 {
     CDialog::OnSize(nType, cx, cy);
     m_RedrawFlags.SetAll(true);
@@ -115,25 +115,22 @@ void CDeckDialog::OnSize(UINT nType, int cx, int cy)
     m_nCoordFieldWidth = 30;
 }
 
-void CDeckDialog::SetEngine(IDeckEngine *pDeckEngine)
+void CTwoPlayersDlg::SetEngine(IDeckEngine *pDeckEngine)
 {
     m_pEngine = pDeckEngine;
 }
 
-void CDeckDialog::SetCurrentPlayerColor(ChessColor currentPlayerColor)
+void CTwoPlayersDlg::SetCurrentPlayerColor(ChessColor currentPlayerColor)
 {
     m_CurrentPlayerColor = currentPlayerColor;
 }
 
-CSize CDeckDialog::GetRequiredSize()
+CSize CTwoPlayersDlg::GetRequiredSize()
 {
-    CSize size;
-    size.cx = 8 * m_nCellSize + 2 * (m_nCoordFieldWidth + m_nBorderWidth);
-    size.cy = size.cx;
-    return size;
+    return m_DeckDrawer.GetRequiredSize();
 }
 
-BOOL CDeckDialog::OnInitDialog()
+BOOL CTwoPlayersDlg::OnInitDialog()
 {
     CDialog::OnInitDialog();
     m_RedrawFlags.SetAll(true);
@@ -141,129 +138,34 @@ BOOL CDeckDialog::OnInitDialog()
     m_bmChessmen.LoadBitmap(IDB_CHESSMEN);
     m_ilChessmen.Create(IDB_CHESSMEN, 64, 0, RGB(0, 0, 0));
 
+    m_DeckDrawer.SetDeckParameters(m_nCellSize, m_nCoordFieldWidth, m_nBorderWidth);
+    m_DeckDrawer.SetCurrentPlayerColor(m_CurrentPlayerColor);
     return TRUE;
 }
 
-BOOL CDeckDialog::OnEraseBkgnd(CDC* pDC)
+BOOL CTwoPlayersDlg::OnEraseBkgnd(CDC* pDC)
 {
     CPen *pOldPen = nullptr;
     if (m_RedrawFlags.bRedrawDesk)
     {
         CDialog::OnEraseBkgnd(pDC);
-        CRect cRect;
-        GetClientRect(cRect);
-        FillRect(*pDC, cRect, CBrush(RGB(255, 255, 255)));
-
-        CPen pen(PS_SOLID, 1, RGB(0, 0, 0));
-        CPen *pOldPen = pDC->SelectObject(&pen);
-        int lastPixel = GetRequiredSize().cx - 1;
-        pDC->MoveTo(0, 0);
-        pDC->LineTo(lastPixel, 0);
-        pDC->LineTo(lastPixel, lastPixel);
-        pDC->LineTo(0, lastPixel);
-        pDC->LineTo(0, 0);
+        DrawDesk(pDC);
     }
-
-    DrawDesk(pDC);
-
-    if (pOldPen)
-        pDC->SelectObject(pOldPen);
 
     return TRUE;
 }
 
-void CDeckDialog::DrawCoordinates(CDC* pDC)
-{
-    int deckStartPosX = m_nCoordFieldWidth;
-    int deckStartPosY = m_nCoordFieldWidth;
-
-    COLORREF oldColor = pDC->SetBkColor(RGB(255, 255, 255));
-
-    CFont* pOldFont = pDC->GetCurrentFont();
-    LOGFONT logFont;
-    pOldFont->GetLogFont(&logFont);
-    logFont.lfWeight = FW_BOLD;
-    logFont.lfHeight = 13;
-
-    CFont newFont;
-    newFont.CreateFontIndirect(&logFont);
-    pDC->SelectObject(&newFont);
-
-    //draw liters
-    int bTop = deckStartPosY + m_nCellSize * 8;
-    int bBottom = bTop + m_nCoordFieldWidth;
-    for (int literNumber = 0; literNumber < 8; literNumber++)
-    {
-        wchar_t c = (m_CurrentPlayerColor == CHESS_COLOR_WHITE ? (L'a' + literNumber) : (L'h' - literNumber));
-        CString str(c);
-
-        int left = deckStartPosX + literNumber*m_nCellSize;
-        int right = left + m_nCellSize;
-        CRect rcTop(left, /*m_StartPoint.y*/0, right, deckStartPosY);
-        CRect rcBottom(left, bTop, right, bBottom);
-
-        pDC->DrawText(str, rcTop, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-        pDC->DrawText(str, rcBottom, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-    }
-
-    //draw numbers
-    int rLeft = deckStartPosX + m_nCellSize * 8;
-    int rRight = rLeft + m_nCoordFieldWidth;
-    for (int i = 0; i < 8; i++)
-    {
-        wchar_t c = (m_CurrentPlayerColor == CHESS_COLOR_WHITE ? (L'8' - i) : (L'1' + i));
-        CString str(c);
-
-        int top = deckStartPosY + i*m_nCellSize;
-        int bottom = top + m_nCellSize;
-
-        CRect rcLeft(/*m_StartPoint.x*/0, top, deckStartPosX, bottom);
-        CRect rcRight(rLeft, top, rRight, bottom);
-
-        pDC->DrawText(str, rcLeft, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-        pDC->DrawText(str, rcRight, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-    }
-
-    pDC->SelectObject(pOldFont);
-    pDC->SetBkColor(oldColor);
-}
-
-void CDeckDialog::DrawRawDesk(CDC* pDC)
-{
-    int deckStartPosX = m_nCoordFieldWidth + m_nBorderWidth;
-    int deckStartPosY = m_nCoordFieldWidth + m_nBorderWidth;
-
-    for (int number = 0; number < 8; number++)
-    {
-        for (int literNumber = 0; literNumber < 8; literNumber++)
-        {
-            IDeckCell* pCell = m_pEngine->GetCell(number + 1, literNumber + 1);
-
-            COLORREF color;
-            if (pCell->GetCellColor() == CHESS_COLOR_BLACK)
-                color = RGB(150, 60, 0);
-            else
-                color = RGB(240, 230, 50);
-
-            int left = deckStartPosX + literNumber*m_nCellSize;
-            int right = left + m_nCellSize;
-
-            int top = deckStartPosY + m_nCellSize * 7 - number*m_nCellSize;
-            int bottom = top + m_nCellSize;
-
-            CRect rc(left, top, right, bottom);
-
-            FillRect(*pDC, rc, CBrush(color));
-        }
-    }
-}
-
-void CDeckDialog::DrawDesk(CDC* pDC)
+void CTwoPlayersDlg::DrawDesk(CDC* pDC)
 {
     if (m_RedrawFlags.bRedrawDesk)
     {
-        DrawCoordinates(pDC);
-        DrawRawDesk(pDC);
+        CRect cRect;
+        GetClientRect(cRect);
+
+        m_DeckDrawer.DrawBorder(pDC, cRect);
+        m_DeckDrawer.DrawCoordinates(pDC);
+        m_DeckDrawer.DrawRawDesk(pDC);
+
         DrawChessmen(pDC);
     }
 
@@ -271,7 +173,7 @@ void CDeckDialog::DrawDesk(CDC* pDC)
         DrawMarks(pDC);
 }
 
-void CDeckDialog::DrawChessmen(CDC* pDC)
+void CTwoPlayersDlg::DrawChessmen(CDC* pDC)
 {
     int deckStartPosX = m_nCoordFieldWidth + m_nBorderWidth;
     int deckStartPosY = m_nCoordFieldWidth + m_nBorderWidth;
@@ -304,7 +206,7 @@ void CDeckDialog::DrawChessmen(CDC* pDC)
     }
 }
 
-void CDeckDialog::DrawChessman__Resizeable(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect)
+void CTwoPlayersDlg::DrawChessman__Resizeable(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect)
 {
     //NOT IMPLEMENTED
 
@@ -331,13 +233,13 @@ void CDeckDialog::DrawChessman__Resizeable(CDC* pDC, ChessmanValue value, ChessC
 
 }
 
-void CDeckDialog::DrawChessman(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect)
+void CTwoPlayersDlg::DrawChessman(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect)
 {
     int imgNumber = GetBmChessmanNumber(value, color);
     m_ilChessmen.Draw(pDC, imgNumber, CPoint(rect.left, rect.top), ILD_TRANSPARENT);
 }
 
-void CDeckDialog::DrawMarks(CDC* pDC)
+void CTwoPlayersDlg::DrawMarks(CDC* pDC)
 {
     DrawMark(pDC, m_StepsPossibility.CanStep, RGB(0, 255, 0));
     DrawMark(pDC, m_StepsPossibility.CanKill, RGB(255, 0, 0));
@@ -345,7 +247,7 @@ void CDeckDialog::DrawMarks(CDC* pDC)
     DrawMark(pDC, m_StepsPossibility.AdditionalCells, RGB(255, 0, 255));
 }
 
-void CDeckDialog::DrawMark(CDC* pDC, std::vector<CellPos>& positions, COLORREF color)
+void CTwoPlayersDlg::DrawMark(CDC* pDC, std::vector<CellPos>& positions, COLORREF color)
 {
     CPen pen(PS_SOLID, 0, color);
     CPen *pOldPen = pDC->SelectObject(&pen);
@@ -366,7 +268,7 @@ void CDeckDialog::DrawMark(CDC* pDC, std::vector<CellPos>& positions, COLORREF c
     pDC->SelectObject(pOldPen);
 }
 
-int CDeckDialog::GetBmChessmanOffset(ChessmanValue value, ChessColor color)
+int CTwoPlayersDlg::GetBmChessmanOffset(ChessmanValue value, ChessColor color)
 {
     int offset = 0;
     if (color == CHESS_COLOR_BLACK)
@@ -400,7 +302,7 @@ int CDeckDialog::GetBmChessmanOffset(ChessmanValue value, ChessColor color)
     return pos + offset;
 }
 
-int CDeckDialog::GetBmChessmanNumber(ChessmanValue value, ChessColor color)
+int CTwoPlayersDlg::GetBmChessmanNumber(ChessmanValue value, ChessColor color)
 {
     int offset = 0;
     if (color == CHESS_COLOR_BLACK)
@@ -434,7 +336,7 @@ int CDeckDialog::GetBmChessmanNumber(ChessmanValue value, ChessColor color)
     return pos + offset;
 }
 
-CRect CDeckDialog::GetRectByCellPos(CellPos &pos)
+CRect CTwoPlayersDlg::GetRectByCellPos(CellPos &pos)
 {
     int deckStartPosX = m_nCoordFieldWidth + m_nBorderWidth;
     int deckStartPosY = m_nCoordFieldWidth + m_nBorderWidth;
@@ -454,7 +356,7 @@ CRect CDeckDialog::GetRectByCellPos(CellPos &pos)
     return rect;
 }
 
-HBITMAP CDeckDialog::CreateBitmapMask(HBITMAP hbmColour)
+HBITMAP CTwoPlayersDlg::CreateBitmapMask(HBITMAP hbmColour)
 {
     HDC hdcMem, hdcMem2;
     HBITMAP hbmMask;

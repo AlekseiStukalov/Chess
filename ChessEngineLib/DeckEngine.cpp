@@ -12,9 +12,7 @@ IDeckEngine* ChessEngine::CreateDeck()
 //-------------------------------------------------
 DeckEngine::DeckEngine()
 {
-
     m_Deck.Create();
-    FillChessmenInitState();
     m_StoryManager.Initialize(this);
 }
 
@@ -237,6 +235,34 @@ bool DeckEngine::GoToNextStep()
     }
 
     return false;
+}
+
+void DeckEngine::PopulateDeckForGame()
+{
+    Chessman* pFigure = nullptr;
+
+    std::vector<ChessmanValue> whiteChessmen = {
+        FigureRook, FigureKnight, FigureBishop, FigureQueen,
+        FigureKing, FigureBishop, FigureKnight, FigureRook
+    };
+
+    std::vector<ChessmanValue> blackChessmen = {
+        FigureRook, FigureKnight, FigureBishop, FigureQueen,
+        FigureKing, FigureBishop, FigureKnight, FigureRook
+    };
+
+    for (char i = 'A'; i <= 'H'; i++)
+    {
+        pFigure = new Chessman(CHESS_COLOR_WHITE, FigurePawn);
+        SetFigure(pFigure, 2, i);
+        pFigure = new Chessman(CHESS_COLOR_WHITE, whiteChessmen[i - 'A']);
+        SetFigure(pFigure, 1, i);
+
+        pFigure = new Chessman(CHESS_COLOR_BLACK, FigurePawn);
+        SetFigure(pFigure, 7, i);
+        pFigure = new Chessman(CHESS_COLOR_BLACK, blackChessmen[i - 'A']);
+        SetFigure(pFigure, 8, i);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -990,34 +1016,6 @@ std::vector<CellPos> DeckEngine::GetConnectingCells(Chessman *pExecutor, Chessma
     }
 
     return cells;
-}
-
-void DeckEngine::FillChessmenInitState()
-{
-    Chessman* pFigure = nullptr;
-
-    std::vector<ChessmanValue> whiteChessmen = {
-        FigureRook, FigureKnight, FigureBishop, FigureQueen,
-        FigureKing, FigureBishop, FigureKnight, FigureRook
-    };
-
-    std::vector<ChessmanValue> blackChessmen = {
-        FigureRook, FigureKnight, FigureBishop, FigureQueen,
-        FigureKing, FigureBishop, FigureKnight, FigureRook
-    };
-
-    for (char i = 'A'; i <= 'H'; i++)
-    {
-        pFigure = new Chessman(CHESS_COLOR_WHITE, FigurePawn);
-        SetFigure(pFigure, 2, i);
-        pFigure = new Chessman(CHESS_COLOR_WHITE, whiteChessmen[i - 'A']);
-        SetFigure(pFigure, 1, i);
-
-        pFigure = new Chessman(CHESS_COLOR_BLACK, FigurePawn);
-        SetFigure(pFigure, 7, i);
-        pFigure = new Chessman(CHESS_COLOR_BLACK, blackChessmen[i - 'A']);
-        SetFigure(pFigure, 8, i);
-    }
 }
 
 bool DeckEngine::SetFigure(Chessman *pChessman, int number, int literNumber)

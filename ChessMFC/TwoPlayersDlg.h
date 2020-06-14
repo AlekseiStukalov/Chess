@@ -1,6 +1,7 @@
 #pragma once
 #include "../Common/Structures.h"
 #include "../Common/APIClasses.h"
+#include "DeckDrawer.h"
 
 #define DEFAULT_DECK_SIZE 572;
 
@@ -12,13 +13,13 @@ struct RedrawFlags
     bool bRedrawMarks;
 };
 
-class CDeckDialog : public CDialog
+class CTwoPlayersDlg : public CDialog
 {
-	DECLARE_DYNAMIC(CDeckDialog)
+	DECLARE_DYNAMIC(CTwoPlayersDlg)
 
 public:
-	CDeckDialog(CWnd* pParent = NULL);
-    virtual ~CDeckDialog();
+	CTwoPlayersDlg(CWnd* pParent = NULL);
+    virtual ~CTwoPlayersDlg();
     virtual BOOL OnInitDialog();
 
     afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
@@ -29,8 +30,6 @@ public:
     void SetCurrentPlayerColor(ChessColor currentPlayerColor);
     CSize GetRequiredSize();
 
-    void DrawCoordinates(CDC* pDC);
-    void DrawRawDesk(CDC* pDC);
     void DrawDesk(CDC* pDC);
     void DrawChessmen(CDC* pDC);
     void DrawChessman__Resizeable(CDC* pDC, ChessmanValue value, ChessColor color, CRect rect);
@@ -51,7 +50,7 @@ protected:
     int m_nCoordFieldWidth;
     int m_nBorderWidth;
 
-
+    DeckDrawer m_DeckDrawer;
     ChessColor m_CurrentPlayerColor;
     CellPos m_SelectedCell;
     StepsPossibility m_StepsPossibility;

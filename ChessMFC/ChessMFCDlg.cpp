@@ -2,7 +2,7 @@
 #include "ChessMFC.h"
 #include "ChessMFCDlg.h"
 #include "afxdialogex.h"
-#include "DeckDialog.h"
+#include "TwoPlayersDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -24,6 +24,10 @@ CChessMFCDlg::CChessMFCDlg(CWnd* pParent /*=NULL*/)
     m_pDeckEngine = nullptr;
     m_CurrentPlayerColor = CHESS_COLOR_WHITE;
     m_nActiveDlg = IDD_CHESS_MENU;
+
+    m_ViewIds.push_back(IDD_CHESS_MENU);
+    m_ViewIds.push_back(IDD_TWO_PLAYERS);
+    m_ViewIds.push_back(IDD_SOLVE_PROBLEM);
 }
 
 void CChessMFCDlg::SetNewDlg(int dialogId)
@@ -54,8 +58,10 @@ BOOL CChessMFCDlg::OnInitDialog()
     ChessEngine engine;
     m_pDeckEngine = engine.CreateDeck();
 
-    m_DeckDlg.SetEngine(m_pDeckEngine);
-    m_DeckDlg.Create(IDD_DECK, this);
+    m_TwoPlayersDlg.SetEngine(m_pDeckEngine);
+    m_TwoPlayersDlg.Create(IDD_TWO_PLAYERS, this);
+    m_TwoPlayersDlg.SetCurrentPlayerColor(m_CurrentPlayerColor);
+
     m_MenuDlg.Create(IDD_CHESS_MENU, this);
     m_SolveProblemDlg.Create(IDD_SOLVE_PROBLEM, this);
 
@@ -122,14 +128,14 @@ void CChessMFCDlg::OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI)
             lpMMI->ptMinTrackSize.y += 250;
             break;
         }
-        case IDD_DECK:
+        case IDD_TWO_PLAYERS:
         {
             lpMMI->ptMinTrackSize.x += m_StartPoint.x * 2;
             lpMMI->ptMinTrackSize.y += m_StartPoint.y * 2;
 
-            if (m_DeckDlg.GetSafeHwnd())
+            if (m_TwoPlayersDlg.GetSafeHwnd())
             {
-                CSize size = m_DeckDlg.GetRequiredSize();
+                CSize size = m_TwoPlayersDlg.GetRequiredSize();
                 lpMMI->ptMinTrackSize.x += size.cx;
                 lpMMI->ptMinTrackSize.y += size.cy;
             }
@@ -157,36 +163,47 @@ void CChessMFCDlg::UpdateLayout()
     CRect wndRect;
     GetWindowRect(&wndRect);
 
+    for each (int dlgId in m_ViewIds)
+        GetDlgById(dlgId)->ShowWindow(SW_HIDE);
+
     switch (m_nActiveDlg)
     {
         case IDD_CHESS_MENU:
         {
             m_MenuDlg.ShowWindow(SW_SHOW);
-            m_DeckDlg.ShowWindow(SW_HIDE);
-            m_SolveProblemDlg.ShowWindow(SW_HIDE);
-
             MoveWindow(CRect(wndRect.left, wndRect.top, 100, 100));
             break;
         }
-        case IDD_DECK:
+        case IDD_TWO_PLAYERS:
         {
-            m_MenuDlg.ShowWindow(SW_HIDE);
-            m_DeckDlg.ShowWindow(SW_SHOW);
-            m_SolveProblemDlg.ShowWindow(SW_HIDE);
-
+            m_pDeckEngine->PopulateDeckForGame();
+            m_TwoPlayersDlg.ShowWindow(SW_SHOW);
             MoveWindow(CRect(wndRect.left, wndRect.top, 100, 100));
             break;
         }
         case IDD_SOLVE_PROBLEM:
         {
-            m_MenuDlg.ShowWindow(SW_HIDE);
-            m_DeckDlg.ShowWindow(SW_HIDE);
             m_SolveProblemDlg.ShowWindow(SW_SHOW);
             MoveWindow(CRect(wndRect.left, wndRect.top, 100, 100));
             break;
         }
         default:
             break;
+    }
+}
+
+CDialog* CChessMFCDlg::GetDlgById(int dialogId)
+{
+    switch (dialogId)
+    {
+        case IDD_CHESS_MENU:
+            return &m_MenuDlg;
+        case IDD_TWO_PLAYERS:
+            return &m_TwoPlayersDlg;
+        case IDD_SOLVE_PROBLEM:
+            return &m_SolveProblemDlg;
+        default:
+            return nullptr;
     }
 }
 
@@ -206,12 +223,12 @@ void CChessMFCDlg::OnSize(UINT nType, int cx, int cy)
             }
             break;
         }
-        case IDD_DECK:
+        case IDD_TWO_PLAYERS:
         {
-            if (m_DeckDlg.GetSafeHwnd())
+            if (m_TwoPlayersDlg.GetSafeHwnd())
             {
-                CSize size = m_DeckDlg.GetRequiredSize();
-                m_DeckDlg.MoveWindow(m_StartPoint.x, m_StartPoint.y, size.cx, size.cy);
+                CSize size = m_TwoPlayersDlg.GetRequiredSize();
+                m_TwoPlayersDlg.MoveWindow(m_StartPoint.x, m_StartPoint.y, size.cx, size.cy);
             }
             break;
         }

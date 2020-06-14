@@ -190,7 +190,8 @@
     <ClInclude Include="ChessMenuDlg.h" />
     <ClInclude Include="ChessMFC.h" />
     <ClInclude Include="ChessMFCDlg.h" />
-    <ClInclude Include="DeckDialog.h" />
+    <ClInclude Include="TwoPlayersDlg.h" />
+    <ClInclude Include="DeckDrawer.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SolveProblemDlg.h" />
     <ClInclude Include="stdafx.h" />
@@ -200,7 +201,8 @@
     <ClCompile Include="ChessMenuDlg.cpp" />
     <ClCompile Include="ChessMFC.cpp" />
     <ClCompile Include="ChessMFCDlg.cpp" />
-    <ClCompile Include="DeckDialog.cpp" />
+    <ClCompile Include="TwoPlayersDlg.cpp" />
+    <ClCompile Include="DeckDrawer.cpp" />
     <ClCompile Include="SolveProblemDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -28,7 +28,7 @@ void CChessMenu::DoDataExchange(CDataExchange* pDX)
 
 void CChessMenu::OnStart2Players()
 {
-    ((CChessMFCDlg*)GetParent())->SetNewDlg(IDD_DECK);
+    ((CChessMFCDlg*)GetParent())->SetNewDlg(IDD_TWO_PLAYERS);
 }
 
 void CChessMenu::OnStartProblemSolving()
