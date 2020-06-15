@@ -8,7 +8,6 @@ BEGIN_MESSAGE_MAP(CTwoPlayersDlg, CDialog)
     ON_WM_LBUTTONDOWN()
     ON_WM_SIZE()
     ON_WM_ERASEBKGND()
-    ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 
@@ -140,6 +139,7 @@ BOOL CTwoPlayersDlg::OnInitDialog()
 
     m_DeckDrawer.SetDeckParameters(m_nCellSize, m_nCoordFieldWidth, m_nBorderWidth);
     m_DeckDrawer.SetCurrentPlayerColor(m_CurrentPlayerColor);
+
     return TRUE;
 }
 
@@ -151,6 +151,9 @@ BOOL CTwoPlayersDlg::OnEraseBkgnd(CDC* pDC)
         CDialog::OnEraseBkgnd(pDC);
         DrawDesk(pDC);
     }
+
+    if (m_RedrawFlags.bRedrawMarks)
+        DrawMarks(pDC);
 
     return TRUE;
 }
@@ -168,9 +171,6 @@ void CTwoPlayersDlg::DrawDesk(CDC* pDC)
 
         DrawChessmen(pDC);
     }
-
-    if (m_RedrawFlags.bRedrawMarks)
-        DrawMarks(pDC);
 }
 
 void CTwoPlayersDlg::DrawChessmen(CDC* pDC)

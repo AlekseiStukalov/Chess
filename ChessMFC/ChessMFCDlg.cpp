@@ -170,21 +170,21 @@ void CChessMFCDlg::UpdateLayout()
     {
         case IDD_CHESS_MENU:
         {
-            m_MenuDlg.ShowWindow(SW_SHOW);
             MoveWindow(CRect(wndRect.left, wndRect.top, 100, 100));
+            m_MenuDlg.ShowWindow(SW_SHOW);
             break;
         }
         case IDD_TWO_PLAYERS:
         {
             m_pDeckEngine->PopulateDeckForGame();
-            m_TwoPlayersDlg.ShowWindow(SW_SHOW);
             MoveWindow(CRect(wndRect.left, wndRect.top, 100, 100));
+            m_TwoPlayersDlg.ShowWindow(SW_SHOW);
             break;
         }
         case IDD_SOLVE_PROBLEM:
         {
-            m_SolveProblemDlg.ShowWindow(SW_SHOW);
             MoveWindow(CRect(wndRect.left, wndRect.top, 100, 100));
+            m_SolveProblemDlg.ShowWindow(SW_SHOW);
             break;
         }
         default:
