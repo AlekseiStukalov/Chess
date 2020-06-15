@@ -145,7 +145,6 @@ BOOL CTwoPlayersDlg::OnInitDialog()
 
 BOOL CTwoPlayersDlg::OnEraseBkgnd(CDC* pDC)
 {
-    CPen *pOldPen = nullptr;
     if (m_RedrawFlags.bRedrawDesk)
     {
         CDialog::OnEraseBkgnd(pDC);

@@ -128,6 +128,7 @@ void CChessMFCDlg::OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI)
             lpMMI->ptMinTrackSize.y += 250;
             break;
         }
+        case IDD_SOLVE_PROBLEM:
         case IDD_TWO_PLAYERS:
         {
             lpMMI->ptMinTrackSize.x += m_StartPoint.x * 2;
@@ -144,13 +145,6 @@ void CChessMFCDlg::OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI)
                 lpMMI->ptMinTrackSize.x += DEFAULT_DECK_SIZE;
                 lpMMI->ptMinTrackSize.y += DEFAULT_DECK_SIZE;
             }
-            break;
-        }
-        case IDD_SOLVE_PROBLEM:
-        {
-            //?
-            lpMMI->ptMinTrackSize.x += 440;
-            lpMMI->ptMinTrackSize.y += 250;
             break;
         }
         default:
@@ -236,8 +230,8 @@ void CChessMFCDlg::OnSize(UINT nType, int cx, int cy)
         {
             if (m_SolveProblemDlg.GetSafeHwnd())
             {
-                //CSize size = m_DeckDlg.GetRequiredSize();
-                //m_SolveProblemDlg.MoveWindow(m_StartPoint.x, m_StartPoint.y, size.cx, size.cy);
+                CSize size = m_SolveProblemDlg.GetRequiredSize();
+                m_SolveProblemDlg.MoveWindow(m_StartPoint.x, m_StartPoint.y, size.cx, size.cy);
             }
             break;
         }

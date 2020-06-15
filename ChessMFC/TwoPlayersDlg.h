@@ -16,6 +16,7 @@ struct RedrawFlags
 class CTwoPlayersDlg : public CDialog
 {
 	DECLARE_DYNAMIC(CTwoPlayersDlg)
+    DECLARE_MESSAGE_MAP()
 
 public:
 	CTwoPlayersDlg(CWnd* pParent = NULL);
@@ -43,6 +44,7 @@ public:
 
     HBITMAP CreateBitmapMask(HBITMAP hbmColour);
 protected:
+
     RedrawFlags m_RedrawFlags;
     CBitmap m_bmChessmen;
     CImageList m_ilChessmen;
@@ -55,8 +57,6 @@ protected:
     CellPos m_SelectedCell;
     StepsPossibility m_StepsPossibility;
     IDeckEngine *m_pEngine;
-
-    DECLARE_MESSAGE_MAP()
 };
 
 
